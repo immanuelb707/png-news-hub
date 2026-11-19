@@ -161,10 +161,43 @@
       border-radius: 8px;
       font-size: 0.95rem;
       outline: none;
+      background: #ffffff;
+      color: var(--text);
     }
 
     .form-group input:focus {
       border-color: var(--red);
+    }
+
+    .password-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .password-wrap input {
+      padding-right: 2.75rem;
+    }
+
+    .toggle-password-btn {
+      position: absolute;
+      right: 0.5rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      color: var(--muted);
+      cursor: pointer;
+      padding: 0.35rem;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 6px;
+    }
+
+    .toggle-password-btn:hover {
+      color: var(--black);
+      background: #f3f4f6;
     }
 
     .auth-submit {
@@ -185,6 +218,51 @@
     }
 
     .auth-submit:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .auth-divider {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      margin: 1rem 0;
+      color: var(--muted);
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+
+    .auth-divider::before,
+    .auth-divider::after {
+      content: "";
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .google-btn {
+      width: 100%;
+      padding: 0.75rem 0.9rem;
+      background: #ffffff;
+      color: var(--black);
+      border: 1.5px solid #cccccc;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+
+    .google-btn:hover {
+      background: #fafafa;
+      border-color: var(--black);
+    }
+
+    .google-btn:disabled {
       opacity: 0.65;
       cursor: not-allowed;
     }
@@ -577,10 +655,25 @@
         <div class="auth-logo-wrap">
           <div class="site-logo" aria-hidden="true">
             <svg width="56" height="56" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="32" cy="32" r="30" fill="#111111" stroke="#fcd116" stroke-width="3" />
-              <path d="M10 42L54 22" stroke="#ce1126" stroke-width="6" stroke-linecap="round" />
-              <polygon points="32,12 36,24 48,24 38,31 42,43 32,36 22,43 26,31 16,24 28,24" fill="#fcd116" />
-              <circle cx="32" cy="32" r="5" fill="#ffffff" />
+              <defs>
+                <clipPath id="pngFlagAuthClip">
+                  <circle cx="32" cy="32" r="29" />
+                </clipPath>
+              </defs>
+              <g clip-path="url(#pngFlagAuthClip)">
+                <!-- Upper-right red triangle & lower-left black triangle split along top-left to bottom-right diagonal -->
+                <polygon points="0,0 64,0 64,64" fill="#ce1126" />
+                <polygon points="0,0 64,64 0,64" fill="#111111" />
+                <!-- Southern Cross stars in red upper-right section -->
+                <polygon points="44,11 45.4,14.2 48.8,14.5 46.2,16.7 47,20.1 44,18.3 41,20.1 41.8,16.7 39.2,14.5 42.6,14.2" fill="#fcd116" />
+                <polygon points="36,20 37.1,22.4 39.7,22.7 37.7,24.4 38.3,27 36,25.6 33.7,27 34.3,24.4 32.3,22.7 34.9,22.4" fill="#fcd116" />
+                <polygon points="51,21 52.1,23.4 54.7,23.7 52.7,25.4 53.3,28 51,26.6 48.7,28 49.3,25.4 47.3,23.7 49.9,23.4" fill="#fcd116" />
+                <polygon points="44,29 45.1,31.4 47.7,31.7 45.7,33.4 46.3,36 44,34.6 41.7,36 42.3,33.4 40.3,31.7 42.9,31.4" fill="#fcd116" />
+                <polygon points="44,22.5 44.7,24.1 46.4,24.3 45.1,25.4 45.5,27 44,26.1 42.5,27 42.9,25.4 41.6,24.3 43.3,24.1" fill="#fcd116" />
+                <!-- White Raggiana Bird of Paradise silhouette in black lower-left section -->
+                <path d="M13 46c3.5-1.5 6.8-4.5 9.8-8.8 1.5-2.1 2.7-3.4 4.3-4.1-1 1.8-1.4 3.4-1.3 4.8 1.8-1.6 3.9-2.5 6.2-2.7-1.6 1.5-2.6 3.1-3 4.9 2.2-1 4.5-1.4 6.8-1.2-2.2 1.6-4.1 3.7-5.6 6.3 2.4-0.6 4.7-0.7 6.8-0.3-3.1 1.5-6.2 3.1-9.3 4.7-2.6 1.3-5.2 2.1-7.8 2.3-1.4 0.1-2.5-0.7-3.4-3.3z" fill="#ffffff" />
+              </g>
+              <circle cx="32" cy="32" r="29.5" stroke="#fcd116" stroke-width="3" />
             </svg>
           </div>
         </div>
@@ -603,11 +696,45 @@
 
           <div class="form-group">
             <label for="authPassword">Password (at least 6 characters)</label>
-            <input type="password" id="authPassword" placeholder="Enter your password" minlength="6" required />
+            <div class="password-wrap">
+              <input type="password" id="authPassword" placeholder="Enter your password" minlength="6" required />
+              <button
+                type="button"
+                class="toggle-password-btn"
+                id="togglePasswordBtn"
+                aria-label="Show password"
+                aria-pressed="false"
+                title="Show password"
+              >
+                <!-- Closed eye icon (default while password is hidden) -->
+                <svg id="eyeClosedIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94" />
+                  <path d="M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19" />
+                  <line x1="1" y1="1" x2="23" y2="23" />
+                </svg>
+                <!-- Open eye icon (shown when password is visible) -->
+                <svg id="eyeOpenIcon" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display: none;" aria-hidden="true">
+                  <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+                  <circle cx="12" cy="12" r="3" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           <button type="submit" class="auth-submit" id="authSubmitBtn">Create Account &amp; Enter</button>
         </form>
+
+        <div class="auth-divider">or</div>
+
+        <button type="button" class="google-btn" id="googleSignInBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true">
+            <path fill="#4285F4" d="M23.49 12.27c0-.79-.07-1.54-.19-2.27H12v4.51h6.47c-.29 1.48-1.14 2.73-2.4 3.58v3h3.86c2.26-2.09 3.56-5.17 3.56-8.82z"/>
+            <path fill="#34A853" d="M12 24c3.24 0 5.95-1.08 7.93-2.91l-3.86-3c-1.08.72-2.45 1.16-4.07 1.16-3.13 0-5.78-2.11-6.73-4.96H1.24v3.09C3.21 21.3 7.31 24 12 24z"/>
+            <path fill="#FBBC05" d="M5.27 14.29c-.24-.72-.38-1.49-.38-2.29s.14-1.57.38-2.29V6.62H1.24C.45 8.21 0 10.05 0 12s.45 3.79 1.24 5.38l4.03-3.09z"/>
+            <path fill="#EA4335" d="M12 4.75c1.77 0 3.35.61 4.6 1.8l3.42-3.42C17.95 1.19 15.24 0 12 0 7.31 0 3.21 2.7 1.24 6.62l4.03 3.09c.95-2.85 3.6-4.96 6.73-4.96z"/>
+          </svg>
+          <span>Continue with Google</span>
+        </button>
 
         <div id="authMsg" class="auth-msg"></div>
 
@@ -625,9 +752,22 @@
         <a href="#" class="brand">
           <span class="site-logo" aria-hidden="true">
             <svg width="36" height="36" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="32" cy="32" r="30" fill="#ce1126" stroke="#fcd116" stroke-width="3" />
-              <polygon points="32,13 36,25 48,25 38,32 42,44 32,37 22,44 26,32 16,25 28,25" fill="#fcd116" />
-              <circle cx="32" cy="32" r="5" fill="#111111" />
+              <defs>
+                <clipPath id="pngFlagNavClip">
+                  <circle cx="32" cy="32" r="29" />
+                </clipPath>
+              </defs>
+              <g clip-path="url(#pngFlagNavClip)">
+                <polygon points="0,0 64,0 64,64" fill="#ce1126" />
+                <polygon points="0,0 64,64 0,64" fill="#111111" />
+                <polygon points="44,11 45.4,14.2 48.8,14.5 46.2,16.7 47,20.1 44,18.3 41,20.1 41.8,16.7 39.2,14.5 42.6,14.2" fill="#fcd116" />
+                <polygon points="36,20 37.1,22.4 39.7,22.7 37.7,24.4 38.3,27 36,25.6 33.7,27 34.3,24.4 32.3,22.7 34.9,22.4" fill="#fcd116" />
+                <polygon points="51,21 52.1,23.4 54.7,23.7 52.7,25.4 53.3,28 51,26.6 48.7,28 49.3,25.4 47.3,23.7 49.9,23.4" fill="#fcd116" />
+                <polygon points="44,29 45.1,31.4 47.7,31.7 45.7,33.4 46.3,36 44,34.6 41.7,36 42.3,33.4 40.3,31.7 42.9,31.4" fill="#fcd116" />
+                <polygon points="44,22.5 44.7,24.1 46.4,24.3 45.1,25.4 45.5,27 44,26.1 42.5,27 42.9,25.4 41.6,24.3 43.3,24.1" fill="#fcd116" />
+                <path d="M13 46c3.5-1.5 6.8-4.5 9.8-8.8 1.5-2.1 2.7-3.4 4.3-4.1-1 1.8-1.4 3.4-1.3 4.8 1.8-1.6 3.9-2.5 6.2-2.7-1.6 1.5-2.6 3.1-3 4.9 2.2-1 4.5-1.4 6.8-1.2-2.2 1.6-4.1 3.7-5.6 6.3 2.4-0.6 4.7-0.7 6.8-0.3-3.1 1.5-6.2 3.1-9.3 4.7-2.6 1.3-5.2 2.1-7.8 2.3-1.4 0.1-2.5-0.7-3.4-3.3z" fill="#ffffff" />
+              </g>
+              <circle cx="32" cy="32" r="29.5" stroke="#fcd116" stroke-width="3" />
             </svg>
           </span>
           <span>PNG <span>News &amp; Info</span> Centre</span>
@@ -653,7 +793,7 @@
           Stay up to date with community notices, local business news, practical guides, and spotlighted
           products—organized clearly in one easy-to-read place.
         </p>
-        <div class="hero-meta">Updated November 19, 2026 &bull; Papua New Guinea</div>
+        <div class="hero-meta">Updated November 20, 2026 &bull; Papua New Guinea</div>
       </section>
 
       <div class="grid">
@@ -673,7 +813,7 @@
             <article class="card" data-category="local">
               <div class="card-top">
                 <span class="tag">Local &amp; Provincial</span>
-                <span>Nov 19, 2026</span>
+                <span>Nov 20, 2026</span>
               </div>
               <h3>Regional Markets &amp; Trade Updates: What Residents Should Know</h3>
               <p>
@@ -689,7 +829,7 @@
             <article class="card" data-category="business">
               <div class="card-top">
                 <span class="tag">Business &amp; Promos</span>
-                <span>Nov 18, 2026</span>
+                <span>Nov 19, 2026</span>
               </div>
               <h3>Local SMEs Expanding Digital Showcases to Reach More Customers</h3>
               <p>
@@ -705,7 +845,7 @@
             <article class="card" data-category="community">
               <div class="card-top">
                 <span class="tag">Community</span>
-                <span>Nov 17, 2026</span>
+                <span>Nov 18, 2026</span>
               </div>
               <h3>Community Notices, Events &amp; Helpful Public Reminders</h3>
               <p>
@@ -786,6 +926,9 @@
       getAuth,
       createUserWithEmailAndPassword,
       signInWithEmailAndPassword,
+      GoogleAuthProvider,
+      signInWithPopup,
+      signInWithRedirect,
       onAuthStateChanged,
       signOut
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
@@ -802,8 +945,9 @@
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const googleProvider = new GoogleAuthProvider();
 
-    let mode = "signup"; // Default to Sign Up first
+    let mode = "signup";
 
     const authGate = document.getElementById("authGate");
     const mainSite = document.getElementById("mainSite");
@@ -812,16 +956,43 @@
     const authForm = document.getElementById("authForm");
     const authEmail = document.getElementById("authEmail");
     const authPassword = document.getElementById("authPassword");
+    const togglePasswordBtn = document.getElementById("togglePasswordBtn");
+    const eyeClosedIcon = document.getElementById("eyeClosedIcon");
+    const eyeOpenIcon = document.getElementById("eyeOpenIcon");
     const authSubmitBtn = document.getElementById("authSubmitBtn");
+    const googleSignInBtn = document.getElementById("googleSignInBtn");
     const authMsg = document.getElementById("authMsg");
     const authSwitchNote = document.getElementById("authSwitchNote");
     const userEmailDisplay = document.getElementById("userEmailDisplay");
     const logoutBtn = document.getElementById("logoutBtn");
 
-    function setMode(newMode) {
-      mode = newMode;
+    function setPasswordVisibility(visible) {
+      authPassword.type = visible ? "text" : "password";
+      togglePasswordBtn.setAttribute("aria-pressed", String(visible));
+      togglePasswordBtn.setAttribute("aria-label", visible ? "Hide password" : "Show password");
+      togglePasswordBtn.setAttribute("title", visible ? "Hide password" : "Show password");
+      eyeClosedIcon.style.display = visible ? "none" : "block";
+      eyeOpenIcon.style.display = visible ? "block" : "none";
+    }
+
+    togglePasswordBtn.addEventListener("click", () => {
+      setPasswordVisibility(authPassword.type === "password");
+    });
+
+    function showError(message) {
+      authMsg.className = "auth-msg error";
+      authMsg.textContent = message;
+    }
+
+    function clearMessage() {
       authMsg.className = "auth-msg";
       authMsg.textContent = "";
+    }
+
+    function setMode(newMode) {
+      mode = newMode;
+      clearMessage();
+      setPasswordVisibility(false);
 
       if (mode === "signup") {
         tabSignup.classList.add("active");
@@ -850,8 +1021,8 @@
       const password = authPassword.value;
 
       authSubmitBtn.disabled = true;
-      authMsg.className = "auth-msg";
-      authMsg.textContent = "";
+      googleSignInBtn.disabled = true;
+      clearMessage();
 
       try {
         if (mode === "signup") {
@@ -859,20 +1030,46 @@
         } else {
           await signInWithEmailAndPassword(auth, email, password);
         }
+        setPasswordVisibility(false);
         authForm.reset();
       } catch (err) {
-        authMsg.className = "auth-msg error";
         if (err.code === "auth/email-already-in-use") {
-          authMsg.textContent = "That email is already registered. Switch to '2. Log In' above.";
+          showError("That email is already registered. Switch to '2. Log In' above.");
         } else if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password" || err.code === "auth/user-not-found") {
-          authMsg.textContent = "Incorrect email or password. If you haven't signed up yet, tap '1. Sign Up'.";
+          showError("Incorrect email or password. If you haven't signed up yet, tap '1. Sign Up'.");
         } else if (err.code === "auth/weak-password") {
-          authMsg.textContent = "Password must be at least 6 characters long.";
+          showError("Password must be at least 6 characters long.");
         } else {
-          authMsg.textContent = err.message;
+          showError(err.message);
         }
       } finally {
         authSubmitBtn.disabled = false;
+        googleSignInBtn.disabled = false;
+      }
+    });
+
+    googleSignInBtn.addEventListener("click", async () => {
+      authSubmitBtn.disabled = true;
+      googleSignInBtn.disabled = true;
+      clearMessage();
+
+      try {
+        await signInWithPopup(auth, googleProvider);
+      } catch (err) {
+        if (err.code === "auth/popup-blocked" || err.code === "auth/operation-not-supported-in-this-environment") {
+          await signInWithRedirect(auth, googleProvider);
+          return;
+        }
+        if (err.code === "auth/popup-closed-by-user") {
+          showError("Google sign-in was cancelled before finishing.");
+        } else if (err.code === "auth/account-exists-with-different-credential") {
+          showError("An account already exists with this email using a different sign-in method.");
+        } else {
+          showError(err.message);
+        }
+      } finally {
+        authSubmitBtn.disabled = false;
+        googleSignInBtn.disabled = false;
       }
     });
 
@@ -884,7 +1081,7 @@
       if (user) {
         authGate.style.display = "none";
         mainSite.style.display = "block";
-        userEmailDisplay.textContent = user.email;
+        userEmailDisplay.textContent = user.email || user.displayName || "Member";
       } else {
         mainSite.style.display = "none";
         authGate.style.display = "flex";
