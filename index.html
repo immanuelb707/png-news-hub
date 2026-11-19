@@ -3,19 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>PNG Info & News Hub</title>
+  <title>Welcome To Papua New Guinea News and Information Centre</title>
   <style>
     :root {
-      --bg: #f5f7fa;
+      --bg: #f7f7f7;
       --surface: #ffffff;
-      --text: #16202a;
-      --muted: #556270;
-      --accent: #0f52ba;
-      --accent-dark: #09377d;
-      --border: #e2e8f0;
-      --tag-bg: #eef4ff;
-      --promo-bg: #fff9eb;
-      --promo-border: #f3d286;
+      --black: #111111;
+      --red: #ce1126;
+      --red-dark: #9e0b1b;
+      --gold: #fcd116;
+      --text: #141414;
+      --muted: #525252;
+      --border: #e0e0e0;
+      --tag-bg: #fff1f2;
+      --promo-bg: #fffbeb;
+      --promo-border: #fcd116;
     }
 
     * {
@@ -32,7 +34,7 @@
     }
 
     a {
-      color: var(--accent);
+      color: var(--red);
       text-decoration: none;
     }
 
@@ -40,10 +42,192 @@
       text-decoration: underline;
     }
 
-    /* Header & Navigation */
-    header {
+    .site-logo {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .site-logo svg {
+      display: block;
+    }
+
+    /* ================= AUTH GATE SCREEN ================= */
+    #authGate {
+      min-height: 100vh;
+      background: linear-gradient(145deg, #111111 0%, #24070b 55%, #ce1126 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+
+    .auth-card {
       background: var(--surface);
+      width: 100%;
+      max-width: 430px;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 20px 45px rgba(0, 0, 0, 0.45);
+      border-top: 6px solid var(--gold);
+    }
+
+    .auth-header {
+      background: var(--black);
+      color: #ffffff;
+      padding: 1.5rem 1.5rem 1.25rem;
+      text-align: center;
+    }
+
+    .auth-logo-wrap {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 0.65rem;
+    }
+
+    .auth-badge {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--black);
+      font-size: 0.72rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      padding: 0.2rem 0.65rem;
+      border-radius: 999px;
+      margin-bottom: 0.6rem;
+    }
+
+    .auth-header h1 {
+      font-size: 1.25rem;
+      line-height: 1.3;
+      margin-bottom: 0.35rem;
+    }
+
+    .auth-header h1 span {
+      color: var(--gold);
+    }
+
+    .auth-header p {
+      font-size: 0.85rem;
+      color: #d4d4d4;
+    }
+
+    .auth-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      background: #f0f0f0;
       border-bottom: 1px solid var(--border);
+    }
+
+    .auth-tab {
+      padding: 0.85rem;
+      border: none;
+      background: transparent;
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--muted);
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+    }
+
+    .auth-tab.active {
+      background: var(--surface);
+      color: var(--red);
+      border-bottom: 3px solid var(--red);
+    }
+
+    .auth-body {
+      padding: 1.5rem;
+    }
+
+    .form-group {
+      margin-bottom: 1rem;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 0.35rem;
+      color: var(--text);
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 0.7rem 0.85rem;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .form-group input:focus {
+      border-color: var(--red);
+    }
+
+    .auth-submit {
+      width: 100%;
+      padding: 0.8rem;
+      background: var(--red);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.98rem;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 0.25rem;
+    }
+
+    .auth-submit:hover {
+      background: var(--red-dark);
+    }
+
+    .auth-submit:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .auth-msg {
+      margin-top: 0.85rem;
+      padding: 0.65rem 0.8rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      display: none;
+    }
+
+    .auth-msg.error {
+      display: block;
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+
+    .auth-switch-note {
+      margin-top: 1rem;
+      text-align: center;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .auth-switch-note button {
+      background: none;
+      border: none;
+      color: var(--red);
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: underline;
+    }
+
+    /* ================= MAIN SITE (HIDDEN UNTIL LOGGED IN) ================= */
+    #mainSite {
+      display: none;
+    }
+
+    header {
+      background: var(--black);
+      border-bottom: 4px solid var(--gold);
       position: sticky;
       top: 0;
       z-index: 100;
@@ -61,31 +245,69 @@
     }
 
     .brand {
-      font-size: 1.25rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-size: 1.15rem;
       font-weight: 800;
-      color: var(--text);
-      letter-spacing: -0.02em;
+      color: #ffffff;
+      letter-spacing: -0.01em;
+    }
+
+    .brand:hover {
+      text-decoration: none;
     }
 
     .brand span {
-      color: var(--accent);
+      color: var(--gold);
     }
 
     nav {
       display: flex;
       flex-wrap: wrap;
+      align-items: center;
       gap: 1rem;
-      font-size: 0.95rem;
-      font-weight: 500;
+      font-size: 0.92rem;
+      font-weight: 600;
     }
 
     nav a {
-      color: var(--muted);
+      color: #e5e5e5;
     }
 
     nav a:hover {
-      color: var(--accent);
+      color: var(--gold);
       text-decoration: none;
+    }
+
+    .user-bar {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+
+    .user-email {
+      font-size: 0.8rem;
+      color: var(--gold);
+      max-width: 160px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+
+    .logout-btn {
+      background: var(--red);
+      color: #ffffff;
+      border: none;
+      padding: 0.38rem 0.75rem;
+      border-radius: 6px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .logout-btn:hover {
+      background: var(--red-dark);
     }
 
     /* Layout Container */
@@ -97,25 +319,27 @@
 
     /* Hero / Featured Story */
     .hero {
-      background: linear-gradient(135deg, #0f52ba 0%, #09377d 100%);
+      background: linear-gradient(135deg, #111111 0%, #8f0b19 60%, #ce1126 100%);
       color: #ffffff;
       border-radius: 14px;
       padding: 2rem;
       margin-bottom: 2rem;
+      border-left: 6px solid var(--gold);
     }
 
     .hero-badge {
       display: inline-block;
-      background: rgba(255, 255, 255, 0.18);
-      padding: 0.25rem 0.7rem;
+      background: var(--gold);
+      color: var(--black);
+      padding: 0.25rem 0.75rem;
       border-radius: 999px;
       font-size: 0.8rem;
-      font-weight: 600;
+      font-weight: 800;
       margin-bottom: 0.75rem;
     }
 
     .hero h1 {
-      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      font-size: clamp(1.5rem, 3vw, 2.25rem);
       line-height: 1.25;
       margin-bottom: 0.75rem;
     }
@@ -128,7 +352,8 @@
 
     .hero-meta {
       font-size: 0.85rem;
-      opacity: 0.85;
+      color: var(--gold);
+      font-weight: 600;
     }
 
     /* Main Grid */
@@ -157,6 +382,7 @@
 
     .section-top h2 {
       font-size: 1.3rem;
+      color: var(--black);
     }
 
     .filters {
@@ -172,15 +398,15 @@
       padding: 0.4rem 0.85rem;
       border-radius: 999px;
       font-size: 0.85rem;
-      font-weight: 600;
+      font-weight: 700;
       cursor: pointer;
     }
 
     .filter-btn.active,
     .filter-btn:hover {
-      background: var(--accent);
+      background: var(--red);
       color: #ffffff;
-      border-color: var(--accent);
+      border-color: var(--red);
     }
 
     /* News Cards */
@@ -192,6 +418,7 @@
     .card {
       background: var(--surface);
       border: 1px solid var(--border);
+      border-left: 4px solid var(--black);
       border-radius: 12px;
       padding: 1.25rem;
     }
@@ -209,7 +436,7 @@
 
     .tag {
       background: var(--tag-bg);
-      color: var(--accent);
+      color: var(--red);
       padding: 0.2rem 0.6rem;
       border-radius: 6px;
       font-weight: 700;
@@ -219,6 +446,7 @@
       font-size: 1.15rem;
       margin-bottom: 0.45rem;
       line-height: 1.35;
+      color: var(--black);
     }
 
     .card p {
@@ -233,7 +461,7 @@
       cursor: pointer;
       border: none;
       background: none;
-      color: var(--accent);
+      color: var(--red);
       padding: 0;
     }
 
@@ -258,7 +486,7 @@
 
     .promo-box {
       background: var(--promo-bg);
-      border: 1px solid var(--promo-border);
+      border: 2px solid var(--promo-border);
       border-radius: 12px;
       padding: 1.25rem;
     }
@@ -268,39 +496,42 @@
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.05em;
-      color: #8a5a00;
+      color: var(--red);
       margin-bottom: 0.4rem;
     }
 
     .promo-box h3 {
       font-size: 1.08rem;
       margin-bottom: 0.4rem;
+      color: var(--black);
     }
 
     .promo-box p {
       font-size: 0.9rem;
-      color: #4a3b14;
+      color: #333333;
       margin-bottom: 0.85rem;
     }
 
     .btn {
       display: inline-block;
-      background: var(--accent);
-      color: #ffffff;
+      background: var(--black);
+      color: var(--gold);
       padding: 0.55rem 1rem;
       border-radius: 8px;
       font-size: 0.88rem;
-      font-weight: 600;
+      font-weight: 700;
     }
 
     .btn:hover {
-      background: var(--accent-dark);
+      background: var(--red);
+      color: #ffffff;
       text-decoration: none;
     }
 
     .info-box {
       background: var(--surface);
       border: 1px solid var(--border);
+      border-top: 4px solid var(--red);
       border-radius: 12px;
       padding: 1.25rem;
     }
@@ -308,6 +539,7 @@
     .info-box h3 {
       font-size: 1.05rem;
       margin-bottom: 0.6rem;
+      color: var(--black);
     }
 
     .info-box ul {
@@ -322,133 +554,204 @@
 
     /* Footer */
     footer {
-      background: var(--surface);
-      border-top: 1px solid var(--border);
+      background: var(--black);
+      color: #e5e5e5;
+      border-top: 4px solid var(--red);
       padding: 1.5rem 1.25rem;
       text-align: center;
       font-size: 0.88rem;
-      color: var(--muted);
+    }
+
+    footer span {
+      color: var(--gold);
+      font-weight: 700;
     }
   </style>
 </head>
 <body>
-  <header>
-    <div class="nav-wrap">
-      <a href="#" class="brand">PNG<span>Info</span> &amp; News</a>
-      <nav>
-        <a href="#news">Latest News</a>
-        <a href="#info">Info Desk</a>
-        <a href="#advertise">Advertise</a>
-      </nav>
-    </div>
-  </header>
 
-  <main class="container">
-    <!-- Featured Top Story -->
-    <section class="hero" aria-label="Featured Story">
-      <span class="hero-badge">Featured Update</span>
-      <h1>Your Local Hub for News, Useful Info &amp; Featured Business Offers</h1>
-      <p>
-        Stay up to date with community notices, local business news, practical guides, and spotlighted
-        products—organized clearly in one easy-to-read place.
-      </p>
-      <div class="hero-meta">Updated November 19, 2026 &bull; Papua New Guinea</div>
-    </section>
-
-    <div class="grid">
-      <!-- News Feed Column -->
-      <section id="news">
-        <div class="section-top">
-          <h2>Latest News</h2>
-          <div class="filters" role="group" aria-label="Filter news by category">
-            <button class="filter-btn active" data-filter="all">All</button>
-            <button class="filter-btn" data-filter="local">Local &amp; Provincial</button>
-            <button class="filter-btn" data-filter="business">Business &amp; Promos</button>
-            <button class="filter-btn" data-filter="community">Community</button>
+  <!-- ================= SIGN UP / LOG IN GATE ================= -->
+  <div id="authGate">
+    <div class="auth-card">
+      <div class="auth-header">
+        <div class="auth-logo-wrap">
+          <div class="site-logo" aria-hidden="true">
+            <svg width="56" height="56" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="30" fill="#111111" stroke="#fcd116" stroke-width="3" />
+              <path d="M10 42L54 22" stroke="#ce1126" stroke-width="6" stroke-linecap="round" />
+              <polygon points="32,12 36,24 48,24 38,31 42,43 32,36 22,43 26,31 16,24 28,24" fill="#fcd116" />
+              <circle cx="32" cy="32" r="5" fill="#ffffff" />
+            </svg>
           </div>
         </div>
+        <span class="auth-badge">Members Portal</span>
+        <h1>Welcome To <span>Papua New Guinea</span> News and Information Centre</h1>
+        <p>Sign up first to create your account, or log in if you already have one.</p>
+      </div>
 
-        <div class="news-list" id="newsList">
-          <article class="card" data-category="local">
-            <div class="card-top">
-              <span class="tag">Local &amp; Provincial</span>
-              <span>Nov 19, 2026</span>
-            </div>
-            <h3>Regional Markets &amp; Trade Updates: What Residents Should Know</h3>
-            <p>
-              A quick roundup of local market activity, transport notes, and helpful reminders for shoppers and vendors.
-            </p>
-            <button class="read-more" onclick="toggleStory(this)">Read update</button>
-            <div class="full-story">
-              Replace this sample text with your verified local update. Include key dates, locations,
-              and any official sources or contact points so readers have reliable details.
-            </div>
-          </article>
+      <div class="auth-tabs">
+        <button type="button" class="auth-tab active" id="tabSignup">1. Sign Up</button>
+        <button type="button" class="auth-tab" id="tabLogin">2. Log In</button>
+      </div>
 
-          <article class="card" data-category="business">
-            <div class="card-top">
-              <span class="tag">Business &amp; Promos</span>
-              <span>Nov 18, 2026</span>
-            </div>
-            <h3>Local SMEs Expanding Digital Showcases to Reach More Customers</h3>
-            <p>
-              Small businesses and product suppliers are pairing clear online listings with direct inquiry options to connect faster.
-            </p>
-            <button class="read-more" onclick="toggleStory(this)">Read update</button>
-            <div class="full-story">
-              Use this category to share business highlights, new product launches, seasonal promotions,
-              or practical tips for local entrepreneurs and buyers.
-            </div>
-          </article>
+      <div class="auth-body">
+        <form id="authForm">
+          <div class="form-group">
+            <label for="authEmail">Email Address</label>
+            <input type="email" id="authEmail" placeholder="you@example.com" required />
+          </div>
 
-          <article class="card" data-category="community">
-            <div class="card-top">
-              <span class="tag">Community</span>
-              <span>Nov 17, 2026</span>
-            </div>
-            <h3>Community Notices, Events &amp; Helpful Public Reminders</h3>
-            <p>
-              Key announcements, upcoming gatherings, and quick reference details gathered in one spot.
-            </p>
-            <button class="read-more" onclick="toggleStory(this)">Read update</button>
-            <div class="full-story">
-              Share event dates, public service reminders, or community announcements clearly—always
-              verifying details before posting.
-            </div>
-          </article>
+          <div class="form-group">
+            <label for="authPassword">Password (at least 6 characters)</label>
+            <input type="password" id="authPassword" placeholder="Enter your password" minlength="6" required />
+          </div>
+
+          <button type="submit" class="auth-submit" id="authSubmitBtn">Create Account &amp; Enter</button>
+        </form>
+
+        <div id="authMsg" class="auth-msg"></div>
+
+        <p class="auth-switch-note" id="authSwitchNote">
+          Already have an account? <button type="button" id="quickSwitchBtn">Log In here</button>
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= PROTECTED WEBSITE CONTENT ================= -->
+  <div id="mainSite">
+    <header>
+      <div class="nav-wrap">
+        <a href="#" class="brand">
+          <span class="site-logo" aria-hidden="true">
+            <svg width="36" height="36" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="32" cy="32" r="30" fill="#ce1126" stroke="#fcd116" stroke-width="3" />
+              <polygon points="32,13 36,25 48,25 38,32 42,44 32,37 22,44 26,32 16,25 28,25" fill="#fcd116" />
+              <circle cx="32" cy="32" r="5" fill="#111111" />
+            </svg>
+          </span>
+          <span>PNG <span>News &amp; Info</span> Centre</span>
+        </a>
+        <nav>
+          <a href="#news">Latest News</a>
+          <a href="#info">Info Desk</a>
+          <a href="#advertise">Advertise</a>
+        </nav>
+        <div class="user-bar">
+          <span class="user-email" id="userEmailDisplay"></span>
+          <button type="button" class="logout-btn" id="logoutBtn">Log Out</button>
         </div>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Featured Top Story -->
+      <section class="hero" aria-label="Featured Story">
+        <span class="hero-badge">Official Hub</span>
+        <h1>Welcome To Papua New Guinea News and Information Centre</h1>
+        <p>
+          Stay up to date with community notices, local business news, practical guides, and spotlighted
+          products—organized clearly in one easy-to-read place.
+        </p>
+        <div class="hero-meta">Updated November 19, 2026 &bull; Papua New Guinea</div>
       </section>
 
-      <!-- Sidebar: Ads & Information Centre -->
-      <aside class="sidebar">
-        <div class="promo-box" id="advertise">
-          <div class="promo-label">Featured Partner / Ad Spot</div>
-          <h3>Promote Your Product or Business Here</h3>
-          <p>
-            Showcase your product, service, or special offer to readers visiting this news and information hub.
-          </p>
-          <a class="btn" href="mailto:your-email@example.com?subject=Ad%20%26%20Feature%20Inquiry">
-            Request Ad Spot
-          </a>
-        </div>
+      <div class="grid">
+        <!-- News Feed Column -->
+        <section id="news">
+          <div class="section-top">
+            <h2>Latest News</h2>
+            <div class="filters" role="group" aria-label="Filter news by category">
+              <button class="filter-btn active" data-filter="all">All</button>
+              <button class="filter-btn" data-filter="local">Local &amp; Provincial</button>
+              <button class="filter-btn" data-filter="business">Business &amp; Promos</button>
+              <button class="filter-btn" data-filter="community">Community</button>
+            </div>
+          </div>
 
-        <div class="info-box" id="info">
-          <h3>Information Centre Quick Links</h3>
-          <ul>
-            <li><strong>Business &amp; Service Directory:</strong> Local shops, suppliers &amp; trades</li>
-            <li><strong>Travel &amp; Getting Around:</strong> Tips &amp; route reminders</li>
-            <li><strong>Practical Guides:</strong> Everyday checklists &amp; how-tos</li>
-            <li><strong>Submit News or Info:</strong> Share a tip or announcement</li>
-          </ul>
-        </div>
-      </aside>
-    </div>
-  </main>
+          <div class="news-list" id="newsList">
+            <article class="card" data-category="local">
+              <div class="card-top">
+                <span class="tag">Local &amp; Provincial</span>
+                <span>Nov 19, 2026</span>
+              </div>
+              <h3>Regional Markets &amp; Trade Updates: What Residents Should Know</h3>
+              <p>
+                A quick roundup of local market activity, transport notes, and helpful reminders for shoppers and vendors.
+              </p>
+              <button class="read-more" onclick="toggleStory(this)">Read update</button>
+              <div class="full-story">
+                Replace this sample text with your verified local update. Include key dates, locations,
+                and any official sources or contact points so readers have reliable details.
+              </div>
+            </article>
 
-  <footer>
-    <p>PNG Info &amp; News Hub &bull; Built Free &bull; Always verify dates and official sources</p>
-  </footer>
+            <article class="card" data-category="business">
+              <div class="card-top">
+                <span class="tag">Business &amp; Promos</span>
+                <span>Nov 18, 2026</span>
+              </div>
+              <h3>Local SMEs Expanding Digital Showcases to Reach More Customers</h3>
+              <p>
+                Small businesses and product suppliers are pairing clear online listings with direct inquiry options to connect faster.
+              </p>
+              <button class="read-more" onclick="toggleStory(this)">Read update</button>
+              <div class="full-story">
+                Use this category to share business highlights, new product launches, seasonal promotions,
+                or practical tips for local entrepreneurs and buyers.
+              </div>
+            </article>
 
+            <article class="card" data-category="community">
+              <div class="card-top">
+                <span class="tag">Community</span>
+                <span>Nov 17, 2026</span>
+              </div>
+              <h3>Community Notices, Events &amp; Helpful Public Reminders</h3>
+              <p>
+                Key announcements, upcoming gatherings, and quick reference details gathered in one spot.
+              </p>
+              <button class="read-more" onclick="toggleStory(this)">Read update</button>
+              <div class="full-story">
+                Share event dates, public service reminders, or community announcements clearly—always
+                verifying details before posting.
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <!-- Sidebar: Ads & Information Centre -->
+        <aside class="sidebar">
+          <div class="promo-box" id="advertise">
+            <div class="promo-label">Featured Partner / Ad Spot</div>
+            <h3>Promote Your Product or Business Here</h3>
+            <p>
+              Showcase your product, service, or special offer to readers visiting this news and information hub.
+            </p>
+            <a class="btn" href="mailto:your-email@example.com?subject=Ad%20%26%20Feature%20Inquiry">
+              Request Ad Spot
+            </a>
+          </div>
+
+          <div class="info-box" id="info">
+            <h3>Information Centre Quick Links</h3>
+            <ul>
+              <li><strong>Business &amp; Service Directory:</strong> Local shops, suppliers &amp; trades</li>
+              <li><strong>Travel &amp; Getting Around:</strong> Tips &amp; route reminders</li>
+              <li><strong>Practical Guides:</strong> Everyday checklists &amp; how-tos</li>
+              <li><strong>Submit News or Info:</strong> Share a tip or announcement</li>
+            </ul>
+          </div>
+        </aside>
+      </div>
+    </main>
+
+    <footer>
+      <p><span>Welcome To Papua New Guinea News and Information Centre</span> &bull; Always verify dates and official sources</p>
+    </footer>
+  </div>
+
+  <!-- ================= NEWS FILTER & ACCORDION SCRIPT ================= -->
   <script>
     const filterButtons = document.querySelectorAll(".filter-btn");
     const cards = document.querySelectorAll("#newsList .card");
@@ -474,6 +777,120 @@
       const isOpen = fullStory.classList.toggle("open");
       button.textContent = isOpen ? "Hide update" : "Read update";
     }
+  </script>
+
+  <!-- ================= FIREBASE AUTHENTICATION SCRIPT ================= -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getAuth,
+      createUserWithEmailAndPassword,
+      signInWithEmailAndPassword,
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDapM1PMl7ftasWGZhd0CZBN5kZX8DSuy8",
+      authDomain: "type-png-news-hub.firebaseapp.com",
+      projectId: "type-png-news-hub",
+      storageBucket: "type-png-news-hub.firebasestorage.app",
+      messagingSenderId: "605303411003",
+      appId: "1:605303411003:web:a823ef14ba9e0213bda71e",
+      measurementId: "G-5RPZF9VWTR"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    let mode = "signup"; // Default to Sign Up first
+
+    const authGate = document.getElementById("authGate");
+    const mainSite = document.getElementById("mainSite");
+    const tabSignup = document.getElementById("tabSignup");
+    const tabLogin = document.getElementById("tabLogin");
+    const authForm = document.getElementById("authForm");
+    const authEmail = document.getElementById("authEmail");
+    const authPassword = document.getElementById("authPassword");
+    const authSubmitBtn = document.getElementById("authSubmitBtn");
+    const authMsg = document.getElementById("authMsg");
+    const authSwitchNote = document.getElementById("authSwitchNote");
+    const userEmailDisplay = document.getElementById("userEmailDisplay");
+    const logoutBtn = document.getElementById("logoutBtn");
+
+    function setMode(newMode) {
+      mode = newMode;
+      authMsg.className = "auth-msg";
+      authMsg.textContent = "";
+
+      if (mode === "signup") {
+        tabSignup.classList.add("active");
+        tabLogin.classList.remove("active");
+        authSubmitBtn.textContent = "Create Account & Enter";
+        authSwitchNote.innerHTML = 'Already have an account? <button type="button" id="quickSwitchBtn">Log In here</button>';
+      } else {
+        tabLogin.classList.add("active");
+        tabSignup.classList.remove("active");
+        authSubmitBtn.textContent = "Log In";
+        authSwitchNote.innerHTML = 'New visitor? <button type="button" id="quickSwitchBtn">Sign Up first</button>';
+      }
+
+      document.getElementById("quickSwitchBtn").addEventListener("click", () => {
+        setMode(mode === "signup" ? "login" : "signup");
+      });
+    }
+
+    tabSignup.addEventListener("click", () => setMode("signup"));
+    tabLogin.addEventListener("click", () => setMode("login"));
+    document.getElementById("quickSwitchBtn").addEventListener("click", () => setMode("login"));
+
+    authForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = authEmail.value.trim();
+      const password = authPassword.value;
+
+      authSubmitBtn.disabled = true;
+      authMsg.className = "auth-msg";
+      authMsg.textContent = "";
+
+      try {
+        if (mode === "signup") {
+          await createUserWithEmailAndPassword(auth, email, password);
+        } else {
+          await signInWithEmailAndPassword(auth, email, password);
+        }
+        authForm.reset();
+      } catch (err) {
+        authMsg.className = "auth-msg error";
+        if (err.code === "auth/email-already-in-use") {
+          authMsg.textContent = "That email is already registered. Switch to '2. Log In' above.";
+        } else if (err.code === "auth/invalid-credential" || err.code === "auth/wrong-password" || err.code === "auth/user-not-found") {
+          authMsg.textContent = "Incorrect email or password. If you haven't signed up yet, tap '1. Sign Up'.";
+        } else if (err.code === "auth/weak-password") {
+          authMsg.textContent = "Password must be at least 6 characters long.";
+        } else {
+          authMsg.textContent = err.message;
+        }
+      } finally {
+        authSubmitBtn.disabled = false;
+      }
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      await signOut(auth);
+    });
+
+    onAuthStateChanged(auth, (user) => {
+      if (user) {
+        authGate.style.display = "none";
+        mainSite.style.display = "block";
+        userEmailDisplay.textContent = user.email;
+      } else {
+        mainSite.style.display = "none";
+        authGate.style.display = "flex";
+        userEmailDisplay.textContent = "";
+      }
+    });
   </script>
 </body>
 </html>
