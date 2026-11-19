@@ -465,12 +465,18 @@
       align-items: center;
       justify-content: space-between;
       gap: 0.75rem;
-      margin-bottom: 1rem;
+      margin-bottom: 0.75rem;
     }
 
     .admin-top h2 {
       font-size: 1.15rem;
       color: var(--black);
+    }
+
+    .admin-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
     }
 
     .admin-toggle-btn {
@@ -489,13 +495,23 @@
       color: #ffffff;
     }
 
-    #publisherFormWrap {
+    .admin-toggle-btn.ad-btn {
+      background: var(--red);
+      color: #ffffff;
+    }
+
+    .admin-toggle-btn.ad-btn:hover {
+      background: var(--red-dark);
+    }
+
+    .publisher-form-wrap {
       display: none;
       border-top: 1px solid var(--border);
       padding-top: 1rem;
+      margin-top: 0.75rem;
     }
 
-    #publisherFormWrap.open {
+    .publisher-form-wrap.open {
       display: block;
     }
 
@@ -745,6 +761,37 @@
       margin-bottom: 0.85rem;
     }
 
+    .ad-item {
+      padding-top: 0.85rem;
+      margin-top: 0.85rem;
+      border-top: 1px dashed rgba(17, 17, 17, 0.2);
+    }
+
+    .ad-item:first-child {
+      padding-top: 0;
+      margin-top: 0;
+      border-top: 0;
+    }
+
+    .ad-photo {
+      width: 100%;
+      max-height: 200px;
+      object-fit: cover;
+      border-radius: 8px;
+      margin-bottom: 0.65rem;
+      border: 1px solid var(--promo-border);
+      display: block;
+    }
+
+    .ad-item-footer {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
     .btn {
       display: inline-block;
       background: var(--black);
@@ -969,13 +1016,16 @@
       </section>
 
       <!-- Editor Panel (Shown only for admin account) -->
-      <section id="adminPanel" aria-label="Publish News">
+      <section id="adminPanel" aria-label="Editor Desk">
         <div class="admin-top">
-          <h2>Editor Desk: Publish News Directly on Site</h2>
-          <button type="button" class="admin-toggle-btn" id="togglePublisherBtn">+ Upload News</button>
+          <h2>Editor Desk: Publish News &amp; Client Ads</h2>
+          <div class="admin-actions">
+            <button type="button" class="admin-toggle-btn" id="togglePublisherBtn">+ Upload News</button>
+            <button type="button" class="admin-toggle-btn ad-btn" id="toggleAdPublisherBtn">+ Upload Client Ad</button>
+          </div>
         </div>
 
-        <div id="publisherFormWrap">
+        <div id="publisherFormWrap" class="publisher-form-wrap">
           <form id="newsPostForm">
             <div class="form-group">
               <label for="newsCategory">Category</label>
@@ -1013,6 +1063,43 @@
 
             <button type="submit" class="publish-btn" id="publishNewsBtn">Publish News</button>
             <div id="publishStatus" class="publish-status"></div>
+          </form>
+        </div>
+
+        <div id="adPublisherFormWrap" class="publisher-form-wrap">
+          <form id="adPostForm">
+            <div class="form-group">
+              <label for="adSponsor">Client / Business Name</label>
+              <input type="text" id="adSponsor" placeholder="e.g., Lae Fresh Market or Kumul Traders" required />
+            </div>
+
+            <div class="form-group">
+              <label for="adHeadline">Ad Headline / Offer</label>
+              <input type="text" id="adHeadline" placeholder="e.g., Weekend Specials & Local Delivery" required />
+            </div>
+
+            <div class="form-group">
+              <label for="adDescription">Ad Details</label>
+              <textarea id="adDescription" rows="3" placeholder="Describe the client's product, service, or promotion..." required></textarea>
+            </div>
+
+            <div class="form-group">
+              <label for="adPhotoUrl">Ad Banner / Photo URL (Optional)</label>
+              <input type="url" id="adPhotoUrl" placeholder="https://example.com/ad-banner.jpg or images/ad.jpg" />
+            </div>
+
+            <div class="form-group">
+              <label for="adLinkUrl">Client Website or Link URL (Optional)</label>
+              <input type="url" id="adLinkUrl" placeholder="https://example.com or https://facebook.com/..." />
+            </div>
+
+            <div class="form-group">
+              <label for="adCtaText">Button Label (Optional)</label>
+              <input type="text" id="adCtaText" placeholder="Learn More" />
+            </div>
+
+            <button type="submit" class="publish-btn" id="publishAdBtn">Publish Client Ad</button>
+            <div id="adPublishStatus" class="publish-status"></div>
           </form>
         </div>
       </section>
@@ -1091,13 +1178,15 @@
         <aside class="sidebar">
           <div class="promo-box" id="advertise">
             <div class="promo-label">Featured Partner / Ad Spot</div>
-            <h3>Promote Your Product or Business Here</h3>
-            <p>
-              Showcase your product, service, or special offer to readers visiting this news and information hub.
-            </p>
-            <a class="btn" href="mailto:immanuelb707@gmail.com?subject=Ad%20%26%20Feature%20Inquiry">
-              Request Ad Spot
-            </a>
+            <div id="adsContainer">
+              <h3>Promote Your Product or Business Here</h3>
+              <p>
+                Showcase your product, service, or special offer to readers visiting this news and information hub.
+              </p>
+              <a class="btn" href="mailto:immanuelb707@gmail.com?subject=Ad%20%26%20Feature%20Inquiry">
+                Request Ad Spot
+              </a>
+            </div>
           </div>
 
           <div class="info-box" id="info">
@@ -1214,7 +1303,7 @@
     }
   </script>
 
-  <!-- ================= FIREBASE AUTH + FIRESTORE NEWS SCRIPT ================= -->
+  <!-- ================= FIREBASE AUTH + FIRESTORE NEWS & ADS SCRIPT ================= -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import {
@@ -1259,6 +1348,7 @@
     let mode = "signup";
     let currentUser = null;
     let unsubscribeNews = null;
+    let unsubscribeAds = null;
 
     const authGate = document.getElementById("authGate");
     const mainSite = document.getElementById("mainSite");
@@ -1280,6 +1370,9 @@
     const adminPanel = document.getElementById("adminPanel");
     const togglePublisherBtn = document.getElementById("togglePublisherBtn");
     const publisherFormWrap = document.getElementById("publisherFormWrap");
+    const toggleAdPublisherBtn = document.getElementById("toggleAdPublisherBtn");
+    const adPublisherFormWrap = document.getElementById("adPublisherFormWrap");
+
     const newsPostForm = document.getElementById("newsPostForm");
     const newsCategory = document.getElementById("newsCategory");
     const newsTitle = document.getElementById("newsTitle");
@@ -1291,7 +1384,19 @@
     const publishStatus = document.getElementById("publishStatus");
     const newsList = document.getElementById("newsList");
 
+    const adPostForm = document.getElementById("adPostForm");
+    const adSponsor = document.getElementById("adSponsor");
+    const adHeadline = document.getElementById("adHeadline");
+    const adDescription = document.getElementById("adDescription");
+    const adPhotoUrl = document.getElementById("adPhotoUrl");
+    const adLinkUrl = document.getElementById("adLinkUrl");
+    const adCtaText = document.getElementById("adCtaText");
+    const publishAdBtn = document.getElementById("publishAdBtn");
+    const adPublishStatus = document.getElementById("adPublishStatus");
+    const adsContainer = document.getElementById("adsContainer");
+
     const starterCardsHTML = newsList.innerHTML;
+    const starterAdsHTML = adsContainer.innerHTML;
 
     function categoryLabel(category) {
       if (category === "business") return "Business & Promos";
@@ -1447,6 +1552,76 @@
       applyNewsFilter();
     }
 
+    function renderFirestoreAds(docs, isAdmin) {
+      if (!docs || docs.length === 0) {
+        adsContainer.innerHTML = starterAdsHTML;
+        return;
+      }
+
+      adsContainer.innerHTML = "";
+      docs.forEach((item) => {
+        const data = item.data();
+        const adCard = document.createElement("div");
+        adCard.className = "ad-item";
+
+        if (isSafeMediaUrl(data.photoUrl)) {
+          const img = document.createElement("img");
+          img.className = "ad-photo";
+          img.src = data.photoUrl.trim();
+          img.alt = data.headline || data.sponsor || "Client advertisement";
+          img.loading = "lazy";
+          img.addEventListener("error", () => {
+            img.remove();
+          });
+          adCard.appendChild(img);
+        }
+
+        const h3 = document.createElement("h3");
+        h3.textContent = data.headline || "";
+
+        const p = document.createElement("p");
+        const prefix = data.sponsor ? `${data.sponsor}: ` : "";
+        p.textContent = prefix + (data.description || "");
+
+        const footer = document.createElement("div");
+        footer.className = "ad-item-footer";
+
+        if (isSafeMediaUrl(data.linkUrl)) {
+          const link = document.createElement("a");
+          link.className = "btn";
+          link.href = data.linkUrl.trim();
+          link.target = "_blank";
+          link.rel = "noopener noreferrer";
+          link.textContent = (data.ctaText || "").trim() || "Learn More";
+          link.addEventListener("click", () => {
+            trackSiteEvent("ad_click", { sponsor: data.sponsor || "Client Ad" });
+          });
+          footer.appendChild(link);
+        }
+
+        if (isAdmin) {
+          const delBtn = document.createElement("button");
+          delBtn.className = "delete-story-btn visible";
+          delBtn.type = "button";
+          delBtn.textContent = "Remove Ad";
+          delBtn.addEventListener("click", async () => {
+            try {
+              await deleteDoc(doc(db, "ads", item.id));
+            } catch (err) {
+              alert("Could not remove ad: " + err.message);
+            }
+          });
+          footer.appendChild(delBtn);
+        }
+
+        adCard.append(h3, p);
+        if (footer.children.length > 0) {
+          adCard.appendChild(footer);
+        }
+        adsContainer.appendChild(adCard);
+      });
+    }
+
     function startNewsFeed(isAdmin) {
       if (unsubscribeNews) {
         unsubscribeNews();
@@ -1462,6 +1637,24 @@
         () => {
           newsList.innerHTML = starterCardsHTML;
           applyNewsFilter();
+        }
+      );
+    }
+
+    function startAdsFeed(isAdmin) {
+      if (unsubscribeAds) {
+        unsubscribeAds();
+        unsubscribeAds = null;
+      }
+
+      const q = query(collection(db, "ads"), orderBy("createdAt", "desc"));
+      unsubscribeAds = onSnapshot(
+        q,
+        (snapshot) => {
+          renderFirestoreAds(snapshot.docs, isAdmin);
+        },
+        () => {
+          adsContainer.innerHTML = starterAdsHTML;
         }
       );
     }
@@ -1517,7 +1710,16 @@
 
     togglePublisherBtn.addEventListener("click", () => {
       const isOpen = publisherFormWrap.classList.toggle("open");
-      togglePublisherBtn.textContent = isOpen ? "Close Form" : "+ Upload News";
+      if (isOpen) adPublisherFormWrap.classList.remove("open");
+      togglePublisherBtn.textContent = isOpen ? "Close News Form" : "+ Upload News";
+      toggleAdPublisherBtn.textContent = "+ Upload Client Ad";
+    });
+
+    toggleAdPublisherBtn.addEventListener("click", () => {
+      const isOpen = adPublisherFormWrap.classList.toggle("open");
+      if (isOpen) publisherFormWrap.classList.remove("open");
+      toggleAdPublisherBtn.textContent = isOpen ? "Close Ad Form" : "+ Upload Client Ad";
+      togglePublisherBtn.textContent = "+ Upload News";
     });
 
     newsPostForm.addEventListener("submit", async (e) => {
@@ -1563,6 +1765,52 @@
         publishStatus.textContent = "Error: " + err.message;
       } finally {
         publishNewsBtn.disabled = false;
+      }
+    });
+
+    adPostForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
+
+      const rawPhotoUrl = adPhotoUrl.value.trim();
+      const rawLinkUrl = adLinkUrl.value.trim();
+
+      if (rawPhotoUrl && !isSafeMediaUrl(rawPhotoUrl)) {
+        adPublishStatus.className = "publish-status err";
+        adPublishStatus.textContent = "Please enter a valid http/https photo URL or relative path (like images/ad.jpg).";
+        return;
+      }
+
+      if (rawLinkUrl && !isSafeMediaUrl(rawLinkUrl)) {
+        adPublishStatus.className = "publish-status err";
+        adPublishStatus.textContent = "Please enter a valid http/https link URL.";
+        return;
+      }
+
+      publishAdBtn.disabled = true;
+      adPublishStatus.className = "publish-status";
+      adPublishStatus.textContent = "Publishing client ad...";
+
+      try {
+        await addDoc(collection(db, "ads"), {
+          sponsor: adSponsor.value.trim(),
+          headline: adHeadline.value.trim(),
+          description: adDescription.value.trim(),
+          photoUrl: rawPhotoUrl,
+          linkUrl: rawLinkUrl,
+          ctaText: adCtaText.value.trim(),
+          author: currentUser.email,
+          createdAt: serverTimestamp()
+        });
+        trackSiteEvent("publish_ad", { sponsor: adSponsor.value.trim() });
+        adPostForm.reset();
+        adPublishStatus.className = "publish-status ok";
+        adPublishStatus.textContent = "Client ad published live!";
+      } catch (err) {
+        adPublishStatus.className = "publish-status err";
+        adPublishStatus.textContent = "Error: " + err.message;
+      } finally {
+        publishAdBtn.disabled = false;
       }
     });
 
@@ -1641,10 +1889,15 @@
         const isAdmin = user.email === ADMIN_EMAIL;
         adminPanel.style.display = isAdmin ? "block" : "none";
         startNewsFeed(isAdmin);
+        startAdsFeed(isAdmin);
       } else {
         if (unsubscribeNews) {
           unsubscribeNews();
           unsubscribeNews = null;
+        }
+        if (unsubscribeAds) {
+          unsubscribeAds();
+          unsubscribeAds = null;
         }
         mainSite.style.display = "none";
         authGate.style.display = "flex";
