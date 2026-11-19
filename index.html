@@ -785,6 +785,28 @@
       margin-bottom: 0.4rem;
     }
 
+    .info-inquiry-desc {
+      font-size: 0.9rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .info-inquiry-btn {
+      width: 100%;
+      padding: 0.75rem 1rem;
+      background: var(--red);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .info-inquiry-btn:hover {
+      background: var(--red-dark);
+    }
+
     /* Footer */
     footer {
       background: var(--black);
@@ -1087,6 +1109,40 @@
               <li><strong>Submit News or Info:</strong> Share a tip or announcement</li>
             </ul>
           </div>
+
+          <div class="info-box" id="infoInquiry">
+            <h3>Ask PNG News &amp; Info Centre</h3>
+            <p class="info-inquiry-desc">
+              Have a question, community notice, or local inquiry? Write your subject and message below to send it directly to our Info Desk.
+            </p>
+            <form id="infoDeskForm" onsubmit="sendInfoDeskEmail(event)">
+              <div class="form-group">
+                <label for="infoSubject">Subject</label>
+                <input
+                  type="text"
+                  id="infoSubject"
+                  name="subject"
+                  placeholder="e.g., Question about local services or news tip"
+                  required
+                />
+              </div>
+
+              <div class="form-group">
+                <label for="infoMessage">Message or Questions</label>
+                <textarea
+                  id="infoMessage"
+                  name="message"
+                  rows="5"
+                  placeholder="Write your full message or questions here..."
+                  required
+                ></textarea>
+              </div>
+
+              <button type="submit" class="info-inquiry-btn">
+                Send to PNG News &amp; Info Centre
+              </button>
+            </form>
+          </div>
         </aside>
       </div>
     </main>
@@ -1096,8 +1152,14 @@
     </footer>
   </div>
 
-  <!-- ================= NEWS FILTER & ACCORDION SCRIPT ================= -->
+  <!-- ================= ANALYTICS, NEWS FILTER, ACCORDION & INFO DESK SCRIPT ================= -->
   <script>
+    function trackSiteEvent(eventName, params = {}) {
+      if (typeof window.gtag === "function") {
+        window.gtag("event", eventName, params);
+      }
+    }
+
     let activeFilter = "all";
 
     function applyNewsFilter() {
@@ -1117,6 +1179,7 @@
         btn.classList.add("active");
         activeFilter = btn.dataset.filter;
         applyNewsFilter();
+        trackSiteEvent("filter_news", { category: activeFilter });
       });
     });
 
@@ -1125,6 +1188,29 @@
       const fullStory = card.querySelector(".full-story");
       const isOpen = fullStory.classList.toggle("open");
       button.textContent = isOpen ? "Hide update" : "Read update";
+      if (isOpen) {
+        const headline = card.querySelector("h3")?.textContent || "Story";
+        trackSiteEvent("read_story", { headline });
+      }
+    }
+
+    function sendInfoDeskEmail(event) {
+      event.preventDefault();
+      // Swap this to "pngnewsinfocentre@gmail.com" once you create that Gmail account
+      const recipient = "immanuelb707@gmail.com";
+      const subject = document.getElementById("infoSubject").value.trim();
+      const message = document.getElementById("infoMessage").value.trim();
+
+      if (!subject || !message) return;
+
+      trackSiteEvent("info_desk_inquiry", { inquiry_type: "mailto" });
+
+      const mailtoLink =
+        "mailto:" + encodeURIComponent(recipient) +
+        "?subject=" + encodeURIComponent("[PNG News & Info Centre] " + subject) +
+        "&body=" + encodeURIComponent(message);
+
+      window.location.href = mailtoLink;
     }
   </script>
 
@@ -1468,6 +1554,7 @@
           author: currentUser.email,
           createdAt: serverTimestamp()
         });
+        trackSiteEvent("publish_news", { category: newsCategory.value });
         newsPostForm.reset();
         publishStatus.className = "publish-status ok";
         publishStatus.textContent = "News published live!";
@@ -1491,8 +1578,10 @@
       try {
         if (mode === "signup") {
           await createUserWithEmailAndPassword(auth, email, password);
+          trackSiteEvent("sign_up", { method: "email_password" });
         } else {
           await signInWithEmailAndPassword(auth, email, password);
+          trackSiteEvent("login", { method: "email_password" });
         }
         setPasswordVisibility(false);
         authForm.reset();
@@ -1519,6 +1608,7 @@
 
       try {
         await signInWithPopup(auth, googleProvider);
+        trackSiteEvent("login", { method: "google" });
       } catch (err) {
         if (err.code === "auth/popup-blocked" || err.code === "auth/operation-not-supported-in-this-environment") {
           await signInWithRedirect(auth, googleProvider);
