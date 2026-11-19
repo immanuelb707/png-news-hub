@@ -515,6 +515,43 @@
       display: block;
     }
 
+    .inbox-list {
+      display: grid;
+      gap: 0.75rem;
+    }
+
+    .inbox-item {
+      background: #fafafa;
+      border: 1px solid var(--border);
+      border-left: 4px solid var(--gold);
+      border-radius: 8px;
+      padding: 0.85rem 1rem;
+    }
+
+    .inbox-meta {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.3rem;
+    }
+
+    .inbox-subject {
+      font-size: 0.96rem;
+      font-weight: 700;
+      color: var(--black);
+      margin-bottom: 0.3rem;
+    }
+
+    .inbox-body {
+      font-size: 0.9rem;
+      color: var(--text);
+      white-space: pre-line;
+      margin-bottom: 0.5rem;
+    }
+
     .publish-btn {
       background: var(--red);
       color: #ffffff;
@@ -877,6 +914,43 @@
       background: var(--red-dark);
     }
 
+    .info-inquiry-btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .inquiry-confirmed-box {
+      display: none;
+      margin-top: 0.9rem;
+      padding: 0.85rem 1rem;
+      border-radius: 10px;
+      background: #dcfce7;
+      border: 1px solid #86efac;
+      color: #14532d;
+      font-size: 0.9rem;
+      font-weight: 700;
+      align-items: center;
+      gap: 0.55rem;
+    }
+
+    .inquiry-confirmed-box.visible {
+      display: flex;
+    }
+
+    .inquiry-tick {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 24px;
+      height: 24px;
+      border-radius: 999px;
+      background: #16a34a;
+      color: #ffffff;
+      font-size: 0.95rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
     /* Footer */
     footer {
       background: var(--black);
@@ -1041,10 +1115,11 @@
       <!-- Editor Panel (Shown only for admin account) -->
       <section id="adminPanel" aria-label="Editor Desk">
         <div class="admin-top">
-          <h2>Editor Desk: Publish News &amp; Upload Ads</h2>
+          <h2>Editor Desk: Publish News, Upload Ads &amp; Inquiries</h2>
           <div class="admin-actions">
             <button type="button" class="admin-toggle-btn" id="togglePublisherBtn">+ Upload News</button>
             <button type="button" class="admin-toggle-btn ad-btn" id="toggleAdPublisherBtn">+ Upload Ads</button>
+            <button type="button" class="admin-toggle-btn" id="toggleInboxBtn">Inquiries</button>
           </div>
         </div>
 
@@ -1127,6 +1202,12 @@
             <button type="submit" class="publish-btn" id="publishAdBtn">Upload Ad</button>
             <div id="adPublishStatus" class="publish-status"></div>
           </form>
+        </div>
+
+        <div id="inboxWrap" class="publisher-form-wrap">
+          <div id="inboxList" class="inbox-list">
+            <p style="font-size: 0.9rem; color: var(--muted);">Loading inquiries...</p>
+          </div>
         </div>
       </section>
 
@@ -1214,7 +1295,7 @@
               <p>
                 Showcase your product, service, or special offer to readers visiting this news and information hub.
               </p>
-              <a class="btn" id="defaultRequestAdBtn" href="mailto:immanuelb707@gmail.com?subject=Ad%20%26%20Feature%20Inquiry">
+              <a class="btn" id="defaultRequestAdBtn" href="#infoInquiry">
                 Request Ad Spot
               </a>
             </div>
@@ -1233,9 +1314,9 @@
           <div class="info-box" id="infoInquiry">
             <h3>Ask PNG News &amp; Info Centre</h3>
             <p class="info-inquiry-desc">
-              Have a question, community notice, or local inquiry? Write your subject and message below to send it directly to our Info Desk.
+              Have a question, community notice, or local inquiry? Write your subject and message below and send it directly on this website.
             </p>
-            <form id="infoDeskForm" onsubmit="sendInfoDeskEmail(event)">
+            <form id="infoDeskForm">
               <div class="form-group">
                 <label for="infoSubject">Subject</label>
                 <input
@@ -1258,10 +1339,16 @@
                 ></textarea>
               </div>
 
-              <button type="submit" class="info-inquiry-btn">
+              <button type="submit" class="info-inquiry-btn" id="sendInfoDeskBtn">
                 Send to PNG News &amp; Info Centre
               </button>
             </form>
+
+            <div id="inquiryConfirmedBox" class="inquiry-confirmed-box" role="status" aria-live="polite">
+              <span class="inquiry-tick" aria-hidden="true">&#10003;</span>
+              <span id="inquiryConfirmedText">Sent &mdash; Your message has been delivered to PNG News &amp; Info Centre.</span>
+            </div>
+            <div id="inquiryErrorMsg" class="publish-status err" style="display: none;"></div>
           </div>
         </aside>
       </div>
@@ -1272,7 +1359,7 @@
     </footer>
   </div>
 
-  <!-- ================= ANALYTICS, NEWS FILTER, ACCORDION & INFO DESK SCRIPT ================= -->
+  <!-- ================= ANALYTICS, NEWS FILTER & ACCORDION SCRIPT ================= -->
   <script>
     function trackSiteEvent(eventName, params = {}) {
       if (typeof window.gtag === "function") {
@@ -1313,28 +1400,9 @@
         trackSiteEvent("read_story", { headline });
       }
     }
-
-    function sendInfoDeskEmail(event) {
-      event.preventDefault();
-      // Swap this to "pngnewsinfocentre@gmail.com" once you create that Gmail account
-      const recipient = "immanuelb707@gmail.com";
-      const subject = document.getElementById("infoSubject").value.trim();
-      const message = document.getElementById("infoMessage").value.trim();
-
-      if (!subject || !message) return;
-
-      trackSiteEvent("info_desk_inquiry", { inquiry_type: "mailto" });
-
-      const mailtoLink =
-        "mailto:" + encodeURIComponent(recipient) +
-        "?subject=" + encodeURIComponent("[PNG News & Info Centre] " + subject) +
-        "&body=" + encodeURIComponent(message);
-
-      window.location.href = mailtoLink;
-    }
   </script>
 
-  <!-- ================= FIREBASE AUTH + FIRESTORE NEWS & ADS SCRIPT ================= -->
+  <!-- ================= FIREBASE AUTH + FIRESTORE NEWS, ADS & INQUIRIES SCRIPT ================= -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import {
@@ -1380,6 +1448,7 @@
     let currentUser = null;
     let unsubscribeNews = null;
     let unsubscribeAds = null;
+    let unsubscribeInquiries = null;
 
     const authGate = document.getElementById("authGate");
     const mainSite = document.getElementById("mainSite");
@@ -1404,6 +1473,9 @@
     const toggleAdPublisherBtn = document.getElementById("toggleAdPublisherBtn");
     const sidebarUploadAdBtn = document.getElementById("sidebarUploadAdBtn");
     const adPublisherFormWrap = document.getElementById("adPublisherFormWrap");
+    const toggleInboxBtn = document.getElementById("toggleInboxBtn");
+    const inboxWrap = document.getElementById("inboxWrap");
+    const inboxList = document.getElementById("inboxList");
 
     const newsPostForm = document.getElementById("newsPostForm");
     const newsCategory = document.getElementById("newsCategory");
@@ -1428,6 +1500,14 @@
     const publishAdBtn = document.getElementById("publishAdBtn");
     const adPublishStatus = document.getElementById("adPublishStatus");
     const adsContainer = document.getElementById("adsContainer");
+
+    const infoDeskForm = document.getElementById("infoDeskForm");
+    const infoSubject = document.getElementById("infoSubject");
+    const infoMessage = document.getElementById("infoMessage");
+    const sendInfoDeskBtn = document.getElementById("sendInfoDeskBtn");
+    const inquiryConfirmedBox = document.getElementById("inquiryConfirmedBox");
+    const inquiryConfirmedText = document.getElementById("inquiryConfirmedText");
+    const inquiryErrorMsg = document.getElementById("inquiryErrorMsg");
 
     const starterCardsHTML = newsList.innerHTML;
     const starterAdsHTML = adsContainer.innerHTML;
@@ -1682,6 +1762,54 @@
       });
     }
 
+    function renderFirestoreInquiries(docs) {
+      if (!docs || docs.length === 0) {
+        inboxList.innerHTML = '<p style="font-size: 0.9rem; color: var(--muted);">No inquiries received yet.</p>';
+        return;
+      }
+
+      inboxList.innerHTML = "";
+      docs.forEach((item) => {
+        const data = item.data();
+        const row = document.createElement("div");
+        row.className = "inbox-item";
+
+        const meta = document.createElement("div");
+        meta.className = "inbox-meta";
+
+        const sender = document.createElement("span");
+        sender.textContent = "From: " + (data.senderEmail || "Member");
+
+        const dateEl = document.createElement("span");
+        dateEl.textContent = formatDate(data.createdAt);
+
+        meta.append(sender, dateEl);
+
+        const subj = document.createElement("div");
+        subj.className = "inbox-subject";
+        subj.textContent = data.subject || "Inquiry";
+
+        const bodyEl = document.createElement("div");
+        bodyEl.className = "inbox-body";
+        bodyEl.textContent = data.message || "";
+
+        const delBtn = document.createElement("button");
+        delBtn.className = "delete-story-btn visible";
+        delBtn.type = "button";
+        delBtn.textContent = "Delete Inquiry";
+        delBtn.addEventListener("click", async () => {
+          try {
+            await deleteDoc(doc(db, "inquiries", item.id));
+          } catch (err) {
+            alert("Could not delete inquiry: " + err.message);
+          }
+        });
+
+        row.append(meta, subj, bodyEl, delBtn);
+        inboxList.appendChild(row);
+      });
+    }
+
     function startNewsFeed(isAdmin) {
       if (unsubscribeNews) {
         unsubscribeNews();
@@ -1718,6 +1846,56 @@
         }
       );
     }
+
+    function startInquiriesFeed() {
+      if (unsubscribeInquiries) {
+        unsubscribeInquiries();
+        unsubscribeInquiries = null;
+      }
+
+      const q = query(collection(db, "inquiries"), orderBy("createdAt", "desc"));
+      unsubscribeInquiries = onSnapshot(
+        q,
+        (snapshot) => {
+          renderFirestoreInquiries(snapshot.docs);
+        },
+        () => {
+          inboxList.innerHTML = '<p style="font-size: 0.9rem; color: var(--muted);">Unable to load inquiries right now.</p>';
+        }
+      );
+    }
+
+    infoDeskForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const subject = infoSubject.value.trim();
+      const message = infoMessage.value.trim();
+      if (!subject || !message) return;
+
+      sendInfoDeskBtn.disabled = true;
+      sendInfoDeskBtn.textContent = "Sending...";
+      inquiryErrorMsg.style.display = "none";
+      inquiryErrorMsg.textContent = "";
+
+      try {
+        await addDoc(collection(db, "inquiries"), {
+          subject,
+          message,
+          senderEmail: currentUser?.email || "Visitor",
+          status: "sent",
+          createdAt: serverTimestamp()
+        });
+        trackSiteEvent("info_desk_inquiry", { inquiry_type: "in_site_firestore" });
+        infoDeskForm.reset();
+        inquiryConfirmedText.textContent = "Sent \u2014 Confirmed: Your message has been received by PNG News & Info Centre.";
+        inquiryConfirmedBox.classList.add("visible");
+      } catch (err) {
+        inquiryErrorMsg.style.display = "block";
+        inquiryErrorMsg.textContent = "Could not send message: " + err.message;
+      } finally {
+        sendInfoDeskBtn.disabled = false;
+        sendInfoDeskBtn.textContent = "Send to PNG News & Info Centre";
+      }
+    });
 
     function setPasswordVisibility(visible) {
       authPassword.type = visible ? "text" : "password";
@@ -1768,27 +1946,48 @@
     tabLogin.addEventListener("click", () => setMode("login"));
     document.getElementById("quickSwitchBtn").addEventListener("click", () => setMode("login"));
 
+    function closeAllAdminSections() {
+      publisherFormWrap.classList.remove("open");
+      adPublisherFormWrap.classList.remove("open");
+      inboxWrap.classList.remove("open");
+      togglePublisherBtn.textContent = "+ Upload News";
+      toggleAdPublisherBtn.textContent = "+ Upload Ads";
+      toggleInboxBtn.textContent = "Inquiries";
+    }
+
     function openAdForm() {
       adminPanel.style.display = "block";
-      publisherFormWrap.classList.remove("open");
+      closeAllAdminSections();
       adPublisherFormWrap.classList.add("open");
-      togglePublisherBtn.textContent = "+ Upload News";
       toggleAdPublisherBtn.textContent = "Close Ad Form";
       adminPanel.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     togglePublisherBtn.addEventListener("click", () => {
-      const isOpen = publisherFormWrap.classList.toggle("open");
-      if (isOpen) adPublisherFormWrap.classList.remove("open");
-      togglePublisherBtn.textContent = isOpen ? "Close News Form" : "+ Upload News";
-      toggleAdPublisherBtn.textContent = "+ Upload Ads";
+      const wasOpen = publisherFormWrap.classList.contains("open");
+      closeAllAdminSections();
+      if (!wasOpen) {
+        publisherFormWrap.classList.add("open");
+        togglePublisherBtn.textContent = "Close News Form";
+      }
     });
 
     toggleAdPublisherBtn.addEventListener("click", () => {
-      const isOpen = adPublisherFormWrap.classList.toggle("open");
-      if (isOpen) publisherFormWrap.classList.remove("open");
-      toggleAdPublisherBtn.textContent = isOpen ? "Close Ad Form" : "+ Upload Ads";
-      togglePublisherBtn.textContent = "+ Upload News";
+      const wasOpen = adPublisherFormWrap.classList.contains("open");
+      closeAllAdminSections();
+      if (!wasOpen) {
+        adPublisherFormWrap.classList.add("open");
+        toggleAdPublisherBtn.textContent = "Close Ad Form";
+      }
+    });
+
+    toggleInboxBtn.addEventListener("click", () => {
+      const wasOpen = inboxWrap.classList.contains("open");
+      closeAllAdminSections();
+      if (!wasOpen) {
+        inboxWrap.classList.add("open");
+        toggleInboxBtn.textContent = "Close Inquiries";
+      }
     });
 
     sidebarUploadAdBtn.addEventListener("click", openAdForm);
@@ -1971,6 +2170,12 @@
         sidebarUploadAdBtn.style.display = isAdmin ? "inline-block" : "none";
         startNewsFeed(isAdmin);
         startAdsFeed(isAdmin);
+        if (isAdmin) {
+          startInquiriesFeed();
+        } else if (unsubscribeInquiries) {
+          unsubscribeInquiries();
+          unsubscribeInquiries = null;
+        }
       } else {
         if (unsubscribeNews) {
           unsubscribeNews();
@@ -1979,6 +2184,10 @@
         if (unsubscribeAds) {
           unsubscribeAds();
           unsubscribeAds = null;
+        }
+        if (unsubscribeInquiries) {
+          unsubscribeInquiries();
+          unsubscribeInquiries = null;
         }
         mainSite.style.display = "none";
         authGate.style.display = "flex";
