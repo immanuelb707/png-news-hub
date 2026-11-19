@@ -591,6 +591,38 @@
       padding: 1.25rem;
     }
 
+    .card-photo {
+      width: 100%;
+      max-height: 320px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 0.85rem;
+      border: 1px solid var(--border);
+      display: block;
+    }
+
+    .card-video-wrap {
+      margin-bottom: 0.85rem;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+      background: #000000;
+    }
+
+    .card-video {
+      width: 100%;
+      max-height: 340px;
+      display: block;
+      background: #000000;
+    }
+
+    .card-embed {
+      width: 100%;
+      aspect-ratio: 16 / 9;
+      border: 0;
+      display: block;
+    }
+
     .card-top {
       display: flex;
       flex-wrap: wrap;
@@ -929,6 +961,16 @@
             </div>
 
             <div class="form-group">
+              <label for="newsPhotoUrl">Photo URL (Optional)</label>
+              <input type="url" id="newsPhotoUrl" placeholder="https://example.com/photo.jpg or images/photo.jpg" />
+            </div>
+
+            <div class="form-group">
+              <label for="newsVideoUrl">Video URL (Optional)</label>
+              <input type="url" id="newsVideoUrl" placeholder="YouTube/Vimeo link or https://example.com/video.mp4" />
+            </div>
+
+            <div class="form-group">
               <label for="newsSummary">Short Summary</label>
               <input type="text" id="newsSummary" placeholder="Short 1–2 sentence preview" required />
             </div>
@@ -1146,6 +1188,8 @@
     const newsPostForm = document.getElementById("newsPostForm");
     const newsCategory = document.getElementById("newsCategory");
     const newsTitle = document.getElementById("newsTitle");
+    const newsPhotoUrl = document.getElementById("newsPhotoUrl");
+    const newsVideoUrl = document.getElementById("newsVideoUrl");
     const newsSummary = document.getElementById("newsSummary");
     const newsBody = document.getElementById("newsBody");
     const publishNewsBtn = document.getElementById("publishNewsBtn");
@@ -1169,6 +1213,62 @@
       });
     }
 
+    function isSafeMediaUrl(url) {
+      if (!url) return false;
+      const trimmed = url.trim();
+      if (/^(https?:\/\/|images\/|videos\/|\.?\/)/i.test(trimmed) && !/^javascript:/i.test(trimmed)) {
+        return true;
+      }
+      return false;
+    }
+
+    function getVideoEmbedUrl(url) {
+      const trimmed = url.trim();
+      const ytMatch = trimmed.match(
+        /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/i
+      );
+      if (ytMatch && ytMatch[1]) {
+        return `https://www.youtube.com/embed/${ytMatch[1]}`;
+      }
+
+      const vimeoMatch = trimmed.match(/vimeo\.com\/(?:video\/)?(\d+)/i);
+      if (vimeoMatch && vimeoMatch[1]) {
+        return `https://player.vimeo.com/video/${vimeoMatch[1]}`;
+      }
+
+      return null;
+    }
+
+    function createVideoElement(videoUrl, titleText) {
+      const wrap = document.createElement("div");
+      wrap.className = "card-video-wrap";
+
+      const embedUrl = getVideoEmbedUrl(videoUrl);
+      if (embedUrl) {
+        const iframe = document.createElement("iframe");
+        iframe.className = "card-embed";
+        iframe.src = embedUrl;
+        iframe.title = titleText || "News video";
+        iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
+        iframe.allowFullscreen = true;
+        iframe.loading = "lazy";
+        wrap.appendChild(iframe);
+        return wrap;
+      }
+
+      const video = document.createElement("video");
+      video.className = "card-video";
+      video.src = videoUrl.trim();
+      video.controls = true;
+      video.preload = "metadata";
+      video.playsInline = true;
+      video.addEventListener("error", () => {
+        wrap.remove();
+      });
+      wrap.appendChild(video);
+      return wrap;
+    }
+
     function renderFirestoreStories(docs, isAdmin) {
       const dynamicCards = docs.map((item) => {
         const data = item.data();
@@ -1176,6 +1276,22 @@
         const article = document.createElement("article");
         article.className = "card";
         article.dataset.category = cat;
+
+        if (isSafeMediaUrl(data.photoUrl)) {
+          const img = document.createElement("img");
+          img.className = "card-photo";
+          img.src = data.photoUrl.trim();
+          img.alt = data.title || "News photo";
+          img.loading = "lazy";
+          img.addEventListener("error", () => {
+            img.remove();
+          });
+          article.appendChild(img);
+        }
+
+        if (isSafeMediaUrl(data.videoUrl)) {
+          article.appendChild(createVideoElement(data.videoUrl, data.title));
+        }
 
         const top = document.createElement("div");
         top.className = "card-top";
@@ -1313,6 +1429,21 @@
       e.preventDefault();
       if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
 
+      const rawPhotoUrl = newsPhotoUrl.value.trim();
+      const rawVideoUrl = newsVideoUrl.value.trim();
+
+      if (rawPhotoUrl && !isSafeMediaUrl(rawPhotoUrl)) {
+        publishStatus.className = "publish-status err";
+        publishStatus.textContent = "Please enter a valid http/https photo URL or relative path (like images/photo.jpg).";
+        return;
+      }
+
+      if (rawVideoUrl && !isSafeMediaUrl(rawVideoUrl)) {
+        publishStatus.className = "publish-status err";
+        publishStatus.textContent = "Please enter a valid YouTube/Vimeo link, video URL, or relative path (like videos/clip.mp4).";
+        return;
+      }
+
       publishNewsBtn.disabled = true;
       publishStatus.className = "publish-status";
       publishStatus.textContent = "Publishing...";
@@ -1321,6 +1452,8 @@
         await addDoc(collection(db, "news"), {
           category: newsCategory.value,
           title: newsTitle.value.trim(),
+          photoUrl: rawPhotoUrl,
+          videoUrl: rawVideoUrl,
           summary: newsSummary.value.trim(),
           body: newsBody.value.trim(),
           author: currentUser.email,
