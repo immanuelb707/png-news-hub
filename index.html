@@ -1,0 +1,479 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PNG Info & News Hub</title>
+  <style>
+    :root {
+      --bg: #f5f7fa;
+      --surface: #ffffff;
+      --text: #16202a;
+      --muted: #556270;
+      --accent: #0f52ba;
+      --accent-dark: #09377d;
+      --border: #e2e8f0;
+      --tag-bg: #eef4ff;
+      --promo-bg: #fff9eb;
+      --promo-border: #f3d286;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+    }
+
+    a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    a:hover {
+      text-decoration: underline;
+    }
+
+    /* Header & Navigation */
+    header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .nav-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.9rem 1.25rem;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .brand {
+      font-size: 1.25rem;
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+    }
+
+    .brand span {
+      color: var(--accent);
+    }
+
+    nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    nav a {
+      color: var(--muted);
+    }
+
+    nav a:hover {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    /* Layout Container */
+    .container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3rem;
+    }
+
+    /* Hero / Featured Story */
+    .hero {
+      background: linear-gradient(135deg, #0f52ba 0%, #09377d 100%);
+      color: #ffffff;
+      border-radius: 14px;
+      padding: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .hero-badge {
+      display: inline-block;
+      background: rgba(255, 255, 255, 0.18);
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero h1 {
+      font-size: clamp(1.5rem, 3vw, 2.2rem);
+      line-height: 1.25;
+      margin-bottom: 0.75rem;
+    }
+
+    .hero p {
+      max-width: 720px;
+      opacity: 0.95;
+      margin-bottom: 1.25rem;
+    }
+
+    .hero-meta {
+      font-size: 0.85rem;
+      opacity: 0.85;
+    }
+
+    /* Main Grid */
+    .grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 1.75rem;
+      align-items: start;
+    }
+
+    @media (max-width: 820px) {
+      .grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* Filter Bar */
+    .section-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .section-top h2 {
+      font-size: 1.3rem;
+    }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+    }
+
+    .filter-btn {
+      border: 1px solid var(--border);
+      background: var(--surface);
+      color: var(--text);
+      padding: 0.4rem 0.85rem;
+      border-radius: 999px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      cursor: pointer;
+    }
+
+    .filter-btn.active,
+    .filter-btn:hover {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    /* News Cards */
+    .news-list {
+      display: grid;
+      gap: 1rem;
+    }
+
+    .card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .card-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.5rem;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    .tag {
+      background: var(--tag-bg);
+      color: var(--accent);
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 700;
+    }
+
+    .card h3 {
+      font-size: 1.15rem;
+      margin-bottom: 0.45rem;
+      line-height: 1.35;
+    }
+
+    .card p {
+      color: var(--muted);
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .read-more {
+      font-size: 0.88rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--accent);
+      padding: 0;
+    }
+
+    .full-story {
+      display: none;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--border);
+      color: var(--text);
+      font-size: 0.93rem;
+    }
+
+    .full-story.open {
+      display: block;
+    }
+
+    /* Sidebar / Partner & Info Boxes */
+    .sidebar {
+      display: grid;
+      gap: 1.25rem;
+    }
+
+    .promo-box {
+      background: var(--promo-bg);
+      border: 1px solid var(--promo-border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .promo-label {
+      font-size: 0.75rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #8a5a00;
+      margin-bottom: 0.4rem;
+    }
+
+    .promo-box h3 {
+      font-size: 1.08rem;
+      margin-bottom: 0.4rem;
+    }
+
+    .promo-box p {
+      font-size: 0.9rem;
+      color: #4a3b14;
+      margin-bottom: 0.85rem;
+    }
+
+    .btn {
+      display: inline-block;
+      background: var(--accent);
+      color: #ffffff;
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .btn:hover {
+      background: var(--accent-dark);
+      text-decoration: none;
+    }
+
+    .info-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem;
+    }
+
+    .info-box h3 {
+      font-size: 1.05rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .info-box ul {
+      padding-left: 1.1rem;
+      font-size: 0.9rem;
+      color: var(--muted);
+    }
+
+    .info-box li {
+      margin-bottom: 0.4rem;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 1.5rem 1.25rem;
+      text-align: center;
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="nav-wrap">
+      <a href="#" class="brand">PNG<span>Info</span> &amp; News</a>
+      <nav>
+        <a href="#news">Latest News</a>
+        <a href="#info">Info Desk</a>
+        <a href="#advertise">Advertise</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Featured Top Story -->
+    <section class="hero" aria-label="Featured Story">
+      <span class="hero-badge">Featured Update</span>
+      <h1>Your Local Hub for News, Useful Info &amp; Featured Business Offers</h1>
+      <p>
+        Stay up to date with community notices, local business news, practical guides, and spotlighted
+        products—organized clearly in one easy-to-read place.
+      </p>
+      <div class="hero-meta">Updated November 19, 2026 &bull; Papua New Guinea</div>
+    </section>
+
+    <div class="grid">
+      <!-- News Feed Column -->
+      <section id="news">
+        <div class="section-top">
+          <h2>Latest News</h2>
+          <div class="filters" role="group" aria-label="Filter news by category">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="local">Local &amp; Provincial</button>
+            <button class="filter-btn" data-filter="business">Business &amp; Promos</button>
+            <button class="filter-btn" data-filter="community">Community</button>
+          </div>
+        </div>
+
+        <div class="news-list" id="newsList">
+          <article class="card" data-category="local">
+            <div class="card-top">
+              <span class="tag">Local &amp; Provincial</span>
+              <span>Nov 19, 2026</span>
+            </div>
+            <h3>Regional Markets &amp; Trade Updates: What Residents Should Know</h3>
+            <p>
+              A quick roundup of local market activity, transport notes, and helpful reminders for shoppers and vendors.
+            </p>
+            <button class="read-more" onclick="toggleStory(this)">Read update</button>
+            <div class="full-story">
+              Replace this sample text with your verified local update. Include key dates, locations,
+              and any official sources or contact points so readers have reliable details.
+            </div>
+          </article>
+
+          <article class="card" data-category="business">
+            <div class="card-top">
+              <span class="tag">Business &amp; Promos</span>
+              <span>Nov 18, 2026</span>
+            </div>
+            <h3>Local SMEs Expanding Digital Showcases to Reach More Customers</h3>
+            <p>
+              Small businesses and product suppliers are pairing clear online listings with direct inquiry options to connect faster.
+            </p>
+            <button class="read-more" onclick="toggleStory(this)">Read update</button>
+            <div class="full-story">
+              Use this category to share business highlights, new product launches, seasonal promotions,
+              or practical tips for local entrepreneurs and buyers.
+            </div>
+          </article>
+
+          <article class="card" data-category="community">
+            <div class="card-top">
+              <span class="tag">Community</span>
+              <span>Nov 17, 2026</span>
+            </div>
+            <h3>Community Notices, Events &amp; Helpful Public Reminders</h3>
+            <p>
+              Key announcements, upcoming gatherings, and quick reference details gathered in one spot.
+            </p>
+            <button class="read-more" onclick="toggleStory(this)">Read update</button>
+            <div class="full-story">
+              Share event dates, public service reminders, or community announcements clearly—always
+              verifying details before posting.
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <!-- Sidebar: Ads & Information Centre -->
+      <aside class="sidebar">
+        <div class="promo-box" id="advertise">
+          <div class="promo-label">Featured Partner / Ad Spot</div>
+          <h3>Promote Your Product or Business Here</h3>
+          <p>
+            Showcase your product, service, or special offer to readers visiting this news and information hub.
+          </p>
+          <a class="btn" href="mailto:your-email@example.com?subject=Ad%20%26%20Feature%20Inquiry">
+            Request Ad Spot
+          </a>
+        </div>
+
+        <div class="info-box" id="info">
+          <h3>Information Centre Quick Links</h3>
+          <ul>
+            <li><strong>Business &amp; Service Directory:</strong> Local shops, suppliers &amp; trades</li>
+            <li><strong>Travel &amp; Getting Around:</strong> Tips &amp; route reminders</li>
+            <li><strong>Practical Guides:</strong> Everyday checklists &amp; how-tos</li>
+            <li><strong>Submit News or Info:</strong> Share a tip or announcement</li>
+          </ul>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <footer>
+    <p>PNG Info &amp; News Hub &bull; Built Free &bull; Always verify dates and official sources</p>
+  </footer>
+
+  <script>
+    const filterButtons = document.querySelectorAll(".filter-btn");
+    const cards = document.querySelectorAll("#newsList .card");
+
+    filterButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        filterButtons.forEach((b) => b.classList.remove("active"));
+        btn.classList.add("active");
+
+        const filter = btn.dataset.filter;
+        cards.forEach((card) => {
+          if (filter === "all" || card.dataset.category === filter) {
+            card.style.display = "block";
+          } else {
+            card.style.display = "none";
+          }
+        });
+      });
+    });
+
+    function toggleStory(button) {
+      const fullStory = button.nextElementSibling;
+      const isOpen = fullStory.classList.toggle("open");
+      button.textContent = isOpen ? "Hide update" : "Read update";
+    }
+  </script>
+</body>
+</html>
