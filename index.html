@@ -740,13 +740,36 @@
       padding: 1.25rem;
     }
 
+    .promo-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
+      margin-bottom: 0.65rem;
+    }
+
     .promo-label {
       font-size: 0.75rem;
       font-weight: 800;
       text-transform: uppercase;
       letter-spacing: 0.05em;
       color: var(--red);
-      margin-bottom: 0.4rem;
+    }
+
+    .owner-upload-ad-btn {
+      background: var(--black);
+      color: var(--gold);
+      border: none;
+      padding: 0.35rem 0.7rem;
+      border-radius: 6px;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .owner-upload-ad-btn:hover {
+      background: var(--red);
+      color: #ffffff;
     }
 
     .promo-box h3 {
@@ -758,7 +781,7 @@
     .promo-box p {
       font-size: 0.9rem;
       color: #333333;
-      margin-bottom: 0.85rem;
+      margin-bottom: 0.75rem;
     }
 
     .ad-item {
@@ -775,7 +798,7 @@
 
     .ad-photo {
       width: 100%;
-      max-height: 200px;
+      max-height: 220px;
       object-fit: cover;
       border-radius: 8px;
       margin-bottom: 0.65rem;
@@ -1018,10 +1041,10 @@
       <!-- Editor Panel (Shown only for admin account) -->
       <section id="adminPanel" aria-label="Editor Desk">
         <div class="admin-top">
-          <h2>Editor Desk: Publish News &amp; Client Ads</h2>
+          <h2>Editor Desk: Publish News &amp; Upload Ads</h2>
           <div class="admin-actions">
             <button type="button" class="admin-toggle-btn" id="togglePublisherBtn">+ Upload News</button>
-            <button type="button" class="admin-toggle-btn ad-btn" id="toggleAdPublisherBtn">+ Upload Client Ad</button>
+            <button type="button" class="admin-toggle-btn ad-btn" id="toggleAdPublisherBtn">+ Upload Ads</button>
           </div>
         </div>
 
@@ -1069,36 +1092,39 @@
         <div id="adPublisherFormWrap" class="publisher-form-wrap">
           <form id="adPostForm">
             <div class="form-group">
-              <label for="adSponsor">Client / Business Name</label>
-              <input type="text" id="adSponsor" placeholder="e.g., Lae Fresh Market or Kumul Traders" required />
+              <label for="adMediaType">Ad Format (Picture or Video)</label>
+              <select id="adMediaType" required>
+                <option value="photo">Picture Ad</option>
+                <option value="video">Video Ad</option>
+              </select>
+            </div>
+
+            <div class="form-group" id="adPhotoGroup">
+              <label for="adPhotoUrl">Picture URL (Required for Picture Ad)</label>
+              <input type="url" id="adPhotoUrl" placeholder="https://example.com/ad-picture.jpg or images/ad.jpg" required />
+            </div>
+
+            <div class="form-group" id="adVideoGroup" style="display: none;">
+              <label for="adVideoUrl">Video URL (Required for Video Ad)</label>
+              <input type="url" id="adVideoUrl" placeholder="YouTube/Vimeo link or https://example.com/ad-video.mp4" />
             </div>
 
             <div class="form-group">
-              <label for="adHeadline">Ad Headline / Offer</label>
-              <input type="text" id="adHeadline" placeholder="e.g., Weekend Specials & Local Delivery" required />
+              <label for="adSponsor">Client / Business Name (Optional)</label>
+              <input type="text" id="adSponsor" placeholder="e.g., Lae Fresh Market" />
             </div>
 
             <div class="form-group">
-              <label for="adDescription">Ad Details</label>
-              <textarea id="adDescription" rows="3" placeholder="Describe the client's product, service, or promotion..." required></textarea>
+              <label for="adHeadline">Ad Title / Caption (Optional)</label>
+              <input type="text" id="adHeadline" placeholder="e.g., Weekend Promo" />
             </div>
 
             <div class="form-group">
-              <label for="adPhotoUrl">Ad Banner / Photo URL (Optional)</label>
-              <input type="url" id="adPhotoUrl" placeholder="https://example.com/ad-banner.jpg or images/ad.jpg" />
-            </div>
-
-            <div class="form-group">
-              <label for="adLinkUrl">Client Website or Link URL (Optional)</label>
+              <label for="adLinkUrl">Client Link URL (Optional)</label>
               <input type="url" id="adLinkUrl" placeholder="https://example.com or https://facebook.com/..." />
             </div>
 
-            <div class="form-group">
-              <label for="adCtaText">Button Label (Optional)</label>
-              <input type="text" id="adCtaText" placeholder="Learn More" />
-            </div>
-
-            <button type="submit" class="publish-btn" id="publishAdBtn">Publish Client Ad</button>
+            <button type="submit" class="publish-btn" id="publishAdBtn">Upload Ad</button>
             <div id="adPublishStatus" class="publish-status"></div>
           </form>
         </div>
@@ -1177,13 +1203,18 @@
         <!-- Sidebar: Ads & Information Centre -->
         <aside class="sidebar">
           <div class="promo-box" id="advertise">
-            <div class="promo-label">Featured Partner / Ad Spot</div>
+            <div class="promo-header">
+              <div class="promo-label">Sponsored Ads</div>
+              <button type="button" class="owner-upload-ad-btn" id="sidebarUploadAdBtn" style="display: none;">
+                + Upload Ads
+              </button>
+            </div>
             <div id="adsContainer">
               <h3>Promote Your Product or Business Here</h3>
               <p>
                 Showcase your product, service, or special offer to readers visiting this news and information hub.
               </p>
-              <a class="btn" href="mailto:immanuelb707@gmail.com?subject=Ad%20%26%20Feature%20Inquiry">
+              <a class="btn" id="defaultRequestAdBtn" href="mailto:immanuelb707@gmail.com?subject=Ad%20%26%20Feature%20Inquiry">
                 Request Ad Spot
               </a>
             </div>
@@ -1371,6 +1402,7 @@
     const togglePublisherBtn = document.getElementById("togglePublisherBtn");
     const publisherFormWrap = document.getElementById("publisherFormWrap");
     const toggleAdPublisherBtn = document.getElementById("toggleAdPublisherBtn");
+    const sidebarUploadAdBtn = document.getElementById("sidebarUploadAdBtn");
     const adPublisherFormWrap = document.getElementById("adPublisherFormWrap");
 
     const newsPostForm = document.getElementById("newsPostForm");
@@ -1385,18 +1417,34 @@
     const newsList = document.getElementById("newsList");
 
     const adPostForm = document.getElementById("adPostForm");
+    const adMediaType = document.getElementById("adMediaType");
+    const adPhotoGroup = document.getElementById("adPhotoGroup");
+    const adPhotoUrl = document.getElementById("adPhotoUrl");
+    const adVideoGroup = document.getElementById("adVideoGroup");
+    const adVideoUrl = document.getElementById("adVideoUrl");
     const adSponsor = document.getElementById("adSponsor");
     const adHeadline = document.getElementById("adHeadline");
-    const adDescription = document.getElementById("adDescription");
-    const adPhotoUrl = document.getElementById("adPhotoUrl");
     const adLinkUrl = document.getElementById("adLinkUrl");
-    const adCtaText = document.getElementById("adCtaText");
     const publishAdBtn = document.getElementById("publishAdBtn");
     const adPublishStatus = document.getElementById("adPublishStatus");
     const adsContainer = document.getElementById("adsContainer");
 
     const starterCardsHTML = newsList.innerHTML;
     const starterAdsHTML = adsContainer.innerHTML;
+
+    function syncAdMediaInputs() {
+      const isVideo = adMediaType.value === "video";
+      adPhotoGroup.style.display = isVideo ? "none" : "block";
+      adPhotoUrl.required = !isVideo;
+      if (isVideo) adPhotoUrl.value = "";
+
+      adVideoGroup.style.display = isVideo ? "block" : "none";
+      adVideoUrl.required = isVideo;
+      if (!isVideo) adVideoUrl.value = "";
+    }
+
+    adMediaType.addEventListener("change", syncAdMediaInputs);
+    syncAdMediaInputs();
 
     function categoryLabel(category) {
       if (category === "business") return "Business & Promos";
@@ -1448,7 +1496,7 @@
         const iframe = document.createElement("iframe");
         iframe.className = "card-embed";
         iframe.src = embedUrl;
-        iframe.title = titleText || "News video";
+        iframe.title = titleText || "Video";
         iframe.allow = "accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture";
         iframe.allowFullscreen = true;
         iframe.loading = "lazy";
@@ -1555,6 +1603,10 @@
     function renderFirestoreAds(docs, isAdmin) {
       if (!docs || docs.length === 0) {
         adsContainer.innerHTML = starterAdsHTML;
+        if (isAdmin) {
+          const reqBtn = document.getElementById("defaultRequestAdBtn");
+          if (reqBtn) reqBtn.style.display = "none";
+        }
         return;
       }
 
@@ -1564,11 +1616,15 @@
         const adCard = document.createElement("div");
         adCard.className = "ad-item";
 
-        if (isSafeMediaUrl(data.photoUrl)) {
+        const labelText = data.headline || data.sponsor || "Sponsored Ad";
+
+        if (data.mediaType === "video" && isSafeMediaUrl(data.videoUrl)) {
+          adCard.appendChild(createVideoElement(data.videoUrl, labelText));
+        } else if (isSafeMediaUrl(data.photoUrl)) {
           const img = document.createElement("img");
           img.className = "ad-photo";
           img.src = data.photoUrl.trim();
-          img.alt = data.headline || data.sponsor || "Client advertisement";
+          img.alt = labelText;
           img.loading = "lazy";
           img.addEventListener("error", () => {
             img.remove();
@@ -1576,12 +1632,17 @@
           adCard.appendChild(img);
         }
 
-        const h3 = document.createElement("h3");
-        h3.textContent = data.headline || "";
+        if (data.headline) {
+          const h3 = document.createElement("h3");
+          h3.textContent = data.headline;
+          adCard.appendChild(h3);
+        }
 
-        const p = document.createElement("p");
-        const prefix = data.sponsor ? `${data.sponsor}: ` : "";
-        p.textContent = prefix + (data.description || "");
+        if (data.sponsor) {
+          const p = document.createElement("p");
+          p.textContent = data.sponsor;
+          adCard.appendChild(p);
+        }
 
         const footer = document.createElement("div");
         footer.className = "ad-item-footer";
@@ -1592,9 +1653,9 @@
           link.href = data.linkUrl.trim();
           link.target = "_blank";
           link.rel = "noopener noreferrer";
-          link.textContent = (data.ctaText || "").trim() || "Learn More";
+          link.textContent = "Visit Sponsor";
           link.addEventListener("click", () => {
-            trackSiteEvent("ad_click", { sponsor: data.sponsor || "Client Ad" });
+            trackSiteEvent("ad_click", { sponsor: data.sponsor || "Ad" });
           });
           footer.appendChild(link);
         }
@@ -1614,7 +1675,6 @@
           footer.appendChild(delBtn);
         }
 
-        adCard.append(h3, p);
         if (footer.children.length > 0) {
           adCard.appendChild(footer);
         }
@@ -1708,19 +1768,30 @@
     tabLogin.addEventListener("click", () => setMode("login"));
     document.getElementById("quickSwitchBtn").addEventListener("click", () => setMode("login"));
 
+    function openAdForm() {
+      adminPanel.style.display = "block";
+      publisherFormWrap.classList.remove("open");
+      adPublisherFormWrap.classList.add("open");
+      togglePublisherBtn.textContent = "+ Upload News";
+      toggleAdPublisherBtn.textContent = "Close Ad Form";
+      adminPanel.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
     togglePublisherBtn.addEventListener("click", () => {
       const isOpen = publisherFormWrap.classList.toggle("open");
       if (isOpen) adPublisherFormWrap.classList.remove("open");
       togglePublisherBtn.textContent = isOpen ? "Close News Form" : "+ Upload News";
-      toggleAdPublisherBtn.textContent = "+ Upload Client Ad";
+      toggleAdPublisherBtn.textContent = "+ Upload Ads";
     });
 
     toggleAdPublisherBtn.addEventListener("click", () => {
       const isOpen = adPublisherFormWrap.classList.toggle("open");
       if (isOpen) publisherFormWrap.classList.remove("open");
-      toggleAdPublisherBtn.textContent = isOpen ? "Close Ad Form" : "+ Upload Client Ad";
+      toggleAdPublisherBtn.textContent = isOpen ? "Close Ad Form" : "+ Upload Ads";
       togglePublisherBtn.textContent = "+ Upload News";
     });
+
+    sidebarUploadAdBtn.addEventListener("click", openAdForm);
 
     newsPostForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -1772,12 +1843,20 @@
       e.preventDefault();
       if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
 
+      const mediaType = adMediaType.value === "video" ? "video" : "photo";
       const rawPhotoUrl = adPhotoUrl.value.trim();
+      const rawVideoUrl = adVideoUrl.value.trim();
       const rawLinkUrl = adLinkUrl.value.trim();
 
-      if (rawPhotoUrl && !isSafeMediaUrl(rawPhotoUrl)) {
+      if (mediaType === "photo" && !isSafeMediaUrl(rawPhotoUrl)) {
         adPublishStatus.className = "publish-status err";
-        adPublishStatus.textContent = "Please enter a valid http/https photo URL or relative path (like images/ad.jpg).";
+        adPublishStatus.textContent = "Please enter a valid picture URL or relative path (like images/ad.jpg).";
+        return;
+      }
+
+      if (mediaType === "video" && !isSafeMediaUrl(rawVideoUrl)) {
+        adPublishStatus.className = "publish-status err";
+        adPublishStatus.textContent = "Please enter a valid video URL, YouTube/Vimeo link, or relative path (like videos/ad.mp4).";
         return;
       }
 
@@ -1789,23 +1868,24 @@
 
       publishAdBtn.disabled = true;
       adPublishStatus.className = "publish-status";
-      adPublishStatus.textContent = "Publishing client ad...";
+      adPublishStatus.textContent = "Uploading ad...";
 
       try {
         await addDoc(collection(db, "ads"), {
+          mediaType,
+          photoUrl: mediaType === "photo" ? rawPhotoUrl : "",
+          videoUrl: mediaType === "video" ? rawVideoUrl : "",
           sponsor: adSponsor.value.trim(),
           headline: adHeadline.value.trim(),
-          description: adDescription.value.trim(),
-          photoUrl: rawPhotoUrl,
           linkUrl: rawLinkUrl,
-          ctaText: adCtaText.value.trim(),
           author: currentUser.email,
           createdAt: serverTimestamp()
         });
-        trackSiteEvent("publish_ad", { sponsor: adSponsor.value.trim() });
+        trackSiteEvent("publish_ad", { media_type: mediaType });
         adPostForm.reset();
+        syncAdMediaInputs();
         adPublishStatus.className = "publish-status ok";
-        adPublishStatus.textContent = "Client ad published live!";
+        adPublishStatus.textContent = "Ad uploaded live!";
       } catch (err) {
         adPublishStatus.className = "publish-status err";
         adPublishStatus.textContent = "Error: " + err.message;
@@ -1888,6 +1968,7 @@
 
         const isAdmin = user.email === ADMIN_EMAIL;
         adminPanel.style.display = isAdmin ? "block" : "none";
+        sidebarUploadAdBtn.style.display = isAdmin ? "inline-block" : "none";
         startNewsFeed(isAdmin);
         startAdsFeed(isAdmin);
       } else {
@@ -1902,6 +1983,7 @@
         mainSite.style.display = "none";
         authGate.style.display = "flex";
         adminPanel.style.display = "none";
+        sidebarUploadAdBtn.style.display = "none";
         userEmailDisplay.textContent = "";
       }
     });
