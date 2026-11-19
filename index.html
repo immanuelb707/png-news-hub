@@ -154,18 +154,23 @@
       color: var(--text);
     }
 
-    .form-group input {
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
       width: 100%;
       padding: 0.7rem 0.85rem;
       border: 1.5px solid var(--border);
       border-radius: 8px;
       font-size: 0.95rem;
+      font-family: inherit;
       outline: none;
       background: #ffffff;
       color: var(--text);
     }
 
-    .form-group input:focus {
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
       border-color: var(--red);
     }
 
@@ -401,7 +406,7 @@
       color: #ffffff;
       border-radius: 14px;
       padding: 2rem;
-      margin-bottom: 2rem;
+      margin-bottom: 1.5rem;
       border-left: 6px solid var(--gold);
     }
 
@@ -432,6 +437,91 @@
       font-size: 0.85rem;
       color: var(--gold);
       font-weight: 600;
+    }
+
+    /* ================= IN-SITE PUBLISHER PANEL ================= */
+    #adminPanel {
+      display: none;
+      background: var(--surface);
+      border: 2px solid var(--gold);
+      border-radius: 14px;
+      padding: 1.35rem;
+      margin-bottom: 1.75rem;
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+    }
+
+    .admin-top {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      margin-bottom: 1rem;
+    }
+
+    .admin-top h2 {
+      font-size: 1.15rem;
+      color: var(--black);
+    }
+
+    .admin-toggle-btn {
+      background: var(--black);
+      color: var(--gold);
+      border: none;
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      font-size: 0.86rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .admin-toggle-btn:hover {
+      background: var(--red);
+      color: #ffffff;
+    }
+
+    #publisherFormWrap {
+      display: none;
+      border-top: 1px solid var(--border);
+      padding-top: 1rem;
+    }
+
+    #publisherFormWrap.open {
+      display: block;
+    }
+
+    .publish-btn {
+      background: var(--red);
+      color: #ffffff;
+      border: none;
+      padding: 0.7rem 1.2rem;
+      border-radius: 8px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .publish-btn:hover {
+      background: var(--red-dark);
+    }
+
+    .publish-btn:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+    }
+
+    .publish-status {
+      margin-top: 0.75rem;
+      font-size: 0.88rem;
+      font-weight: 600;
+    }
+
+    .publish-status.ok {
+      color: #166534;
+    }
+
+    .publish-status.err {
+      color: #991b1b;
     }
 
     /* Main Grid */
@@ -533,6 +623,13 @@
       margin-bottom: 0.75rem;
     }
 
+    .card-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
     .read-more {
       font-size: 0.88rem;
       font-weight: 700;
@@ -543,6 +640,22 @@
       padding: 0;
     }
 
+    .delete-story-btn {
+      display: none;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+      border: 1px solid #fecaca;
+      background: #fef2f2;
+      color: #991b1b;
+      padding: 0.25rem 0.6rem;
+      border-radius: 6px;
+    }
+
+    .delete-story-btn.visible {
+      display: inline-block;
+    }
+
     .full-story {
       display: none;
       margin-top: 0.75rem;
@@ -550,6 +663,7 @@
       border-top: 1px dashed var(--border);
       color: var(--text);
       font-size: 0.93rem;
+      white-space: pre-line;
     }
 
     .full-story.open {
@@ -661,18 +775,13 @@
                 </clipPath>
               </defs>
               <g clip-path="url(#pngFlagAuthClip)">
-                <!-- Diagonal split from top-right to bottom-left: Red upper-right, Black lower-left -->
                 <polygon points="0,0 64,0 0,64" fill="#ce1126" />
                 <polygon points="64,0 64,64 0,64" fill="#111111" />
-
-                <!-- 5 White Southern Cross stars in the lower-left black section -->
                 <polygon points="22,31 23.1,33.5 25.8,33.8 23.8,35.6 24.4,38.3 22,36.9 19.6,38.3 20.2,35.6 18.2,33.8 20.9,33.5" fill="#ffffff" />
                 <polygon points="14,41 14.9,43 17,43.2 15.4,44.6 15.9,46.7 14,45.6 12.1,46.7 12.6,44.6 11,43.2 13.1,43" fill="#ffffff" />
                 <polygon points="30,41 30.9,43 33,43.2 31.4,44.6 31.9,46.7 30,45.6 28.1,46.7 28.6,44.6 27,43.2 29.1,43" fill="#ffffff" />
                 <polygon points="22,50 22.9,52 25,52.2 23.4,53.6 23.9,55.7 22,54.6 20.1,55.7 20.6,53.6 19,52.2 21.1,52" fill="#ffffff" />
                 <polygon points="26,44.5 26.5,45.7 27.8,45.8 26.8,46.7 27.1,48 26,47.3 24.9,48 25.2,46.7 24.2,45.8 25.5,45.7" fill="#ffffff" />
-
-                <!-- Golden Raggiana Bird of Paradise in the upper-right red section -->
                 <path d="M29 22.5c2.2-1.8 4.9-3.6 7.8-4.9 1.6-0.7 2.8-1.8 3.5-3.2 0.3-0.6 0.9-0.8 1.5-0.6 0.5 0.2 0.8 0.7 0.7 1.2 1.8-0.9 3.9-1.2 5.9-0.9-1.4 1.1-2.5 2.4-3.2 3.9 2-0.3 4 0 5.8 0.8-1.7 0.8-3.1 2-4.2 3.5 2.1 0.1 4.1 0.8 5.8 2-2.2 0.2-4.2 0.9-5.9 2 1.8 1.3 2.9 3.2 3.1 5.4-1.3-0.8-2.3-2-2.9-3.5-0.3 2.7-1.9 4.8-4.5 5.9 0.9-1.6 1.2-3.3 0.9-5-1.5 1.4-3.4 2.2-5.5 2.3 1.4-1.3 2.3-2.9 2.6-4.7-1.9 0.7-3.9 0.9-5.9 0.6 1.5-1 2.7-2.3 3.5-3.9-2.2 0.2-4.3-0.1-6.3-0.8 1.7-0.5 2.9-1.4 3.4-2.6z" fill="#fcd116" />
               </g>
               <circle cx="32" cy="32" r="29.5" stroke="#fcd116" stroke-width="3" />
@@ -796,6 +905,45 @@
         <div class="hero-meta">Updated November 20, 2026 &bull; Papua New Guinea</div>
       </section>
 
+      <!-- Editor Panel (Shown only for admin account) -->
+      <section id="adminPanel" aria-label="Publish News">
+        <div class="admin-top">
+          <h2>Editor Desk: Publish News Directly on Site</h2>
+          <button type="button" class="admin-toggle-btn" id="togglePublisherBtn">+ Upload News</button>
+        </div>
+
+        <div id="publisherFormWrap">
+          <form id="newsPostForm">
+            <div class="form-group">
+              <label for="newsCategory">Category</label>
+              <select id="newsCategory" required>
+                <option value="local">Local &amp; Provincial</option>
+                <option value="business">Business &amp; Promos</option>
+                <option value="community">Community</option>
+              </select>
+            </div>
+
+            <div class="form-group">
+              <label for="newsTitle">Headline</label>
+              <input type="text" id="newsTitle" placeholder="Enter news headline" required />
+            </div>
+
+            <div class="form-group">
+              <label for="newsSummary">Short Summary</label>
+              <input type="text" id="newsSummary" placeholder="Short 1–2 sentence preview" required />
+            </div>
+
+            <div class="form-group">
+              <label for="newsBody">Full Story</label>
+              <textarea id="newsBody" rows="4" placeholder="Write the full update details..." required></textarea>
+            </div>
+
+            <button type="submit" class="publish-btn" id="publishNewsBtn">Publish News</button>
+            <div id="publishStatus" class="publish-status"></div>
+          </form>
+        </div>
+      </section>
+
       <div class="grid">
         <!-- News Feed Column -->
         <section id="news">
@@ -819,7 +967,9 @@
               <p>
                 A quick roundup of local market activity, transport notes, and helpful reminders for shoppers and vendors.
               </p>
-              <button class="read-more" onclick="toggleStory(this)">Read update</button>
+              <div class="card-actions">
+                <button class="read-more" onclick="toggleStory(this)">Read update</button>
+              </div>
               <div class="full-story">
                 Replace this sample text with your verified local update. Include key dates, locations,
                 and any official sources or contact points so readers have reliable details.
@@ -835,7 +985,9 @@
               <p>
                 Small businesses and product suppliers are pairing clear online listings with direct inquiry options to connect faster.
               </p>
-              <button class="read-more" onclick="toggleStory(this)">Read update</button>
+              <div class="card-actions">
+                <button class="read-more" onclick="toggleStory(this)">Read update</button>
+              </div>
               <div class="full-story">
                 Use this category to share business highlights, new product launches, seasonal promotions,
                 or practical tips for local entrepreneurs and buyers.
@@ -851,7 +1003,9 @@
               <p>
                 Key announcements, upcoming gatherings, and quick reference details gathered in one spot.
               </p>
-              <button class="read-more" onclick="toggleStory(this)">Read update</button>
+              <div class="card-actions">
+                <button class="read-more" onclick="toggleStory(this)">Read update</button>
+              </div>
               <div class="full-story">
                 Share event dates, public service reminders, or community announcements clearly—always
                 verifying details before posting.
@@ -868,7 +1022,7 @@
             <p>
               Showcase your product, service, or special offer to readers visiting this news and information hub.
             </p>
-            <a class="btn" href="mailto:your-email@example.com?subject=Ad%20%26%20Feature%20Inquiry">
+            <a class="btn" href="mailto:immanuelb707@gmail.com?subject=Ad%20%26%20Feature%20Inquiry">
               Request Ad Spot
             </a>
           </div>
@@ -893,33 +1047,37 @@
 
   <!-- ================= NEWS FILTER & ACCORDION SCRIPT ================= -->
   <script>
-    const filterButtons = document.querySelectorAll(".filter-btn");
-    const cards = document.querySelectorAll("#newsList .card");
+    let activeFilter = "all";
 
-    filterButtons.forEach((btn) => {
+    function applyNewsFilter() {
+      const cards = document.querySelectorAll("#newsList .card");
+      cards.forEach((card) => {
+        if (activeFilter === "all" || card.dataset.category === activeFilter) {
+          card.style.display = "block";
+        } else {
+          card.style.display = "none";
+        }
+      });
+    }
+
+    document.querySelectorAll(".filter-btn").forEach((btn) => {
       btn.addEventListener("click", () => {
-        filterButtons.forEach((b) => b.classList.remove("active"));
+        document.querySelectorAll(".filter-btn").forEach((b) => b.classList.remove("active"));
         btn.classList.add("active");
-
-        const filter = btn.dataset.filter;
-        cards.forEach((card) => {
-          if (filter === "all" || card.dataset.category === filter) {
-            card.style.display = "block";
-          } else {
-            card.style.display = "none";
-          }
-        });
+        activeFilter = btn.dataset.filter;
+        applyNewsFilter();
       });
     });
 
     function toggleStory(button) {
-      const fullStory = button.nextElementSibling;
+      const card = button.closest(".card");
+      const fullStory = card.querySelector(".full-story");
       const isOpen = fullStory.classList.toggle("open");
       button.textContent = isOpen ? "Hide update" : "Read update";
     }
   </script>
 
-  <!-- ================= FIREBASE AUTHENTICATION SCRIPT ================= -->
+  <!-- ================= FIREBASE AUTH + FIRESTORE NEWS SCRIPT ================= -->
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import {
@@ -932,6 +1090,17 @@
       onAuthStateChanged,
       signOut
     } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      deleteDoc,
+      doc,
+      query,
+      orderBy,
+      onSnapshot,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDapM1PMl7ftasWGZhd0CZBN5kZX8DSuy8",
@@ -943,11 +1112,16 @@
       measurementId: "G-5RPZF9VWTR"
     };
 
+    const ADMIN_EMAIL = "immanuelb707@gmail.com";
+
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
+    const db = getFirestore(app);
     const googleProvider = new GoogleAuthProvider();
 
     let mode = "signup";
+    let currentUser = null;
+    let unsubscribeNews = null;
 
     const authGate = document.getElementById("authGate");
     const mainSite = document.getElementById("mainSite");
@@ -965,6 +1139,121 @@
     const authSwitchNote = document.getElementById("authSwitchNote");
     const userEmailDisplay = document.getElementById("userEmailDisplay");
     const logoutBtn = document.getElementById("logoutBtn");
+
+    const adminPanel = document.getElementById("adminPanel");
+    const togglePublisherBtn = document.getElementById("togglePublisherBtn");
+    const publisherFormWrap = document.getElementById("publisherFormWrap");
+    const newsPostForm = document.getElementById("newsPostForm");
+    const newsCategory = document.getElementById("newsCategory");
+    const newsTitle = document.getElementById("newsTitle");
+    const newsSummary = document.getElementById("newsSummary");
+    const newsBody = document.getElementById("newsBody");
+    const publishNewsBtn = document.getElementById("publishNewsBtn");
+    const publishStatus = document.getElementById("publishStatus");
+    const newsList = document.getElementById("newsList");
+
+    const starterCardsHTML = newsList.innerHTML;
+
+    function categoryLabel(category) {
+      if (category === "business") return "Business & Promos";
+      if (category === "community") return "Community";
+      return "Local & Provincial";
+    }
+
+    function formatDate(timestamp) {
+      const date = timestamp && typeof timestamp.toDate === "function" ? timestamp.toDate() : new Date();
+      return date.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
+      });
+    }
+
+    function renderFirestoreStories(docs, isAdmin) {
+      const dynamicCards = docs.map((item) => {
+        const data = item.data();
+        const cat = data.category || "local";
+        const article = document.createElement("article");
+        article.className = "card";
+        article.dataset.category = cat;
+
+        const top = document.createElement("div");
+        top.className = "card-top";
+
+        const tag = document.createElement("span");
+        tag.className = "tag";
+        tag.textContent = categoryLabel(cat);
+
+        const dateEl = document.createElement("span");
+        dateEl.textContent = formatDate(data.createdAt);
+
+        top.append(tag, dateEl);
+
+        const h3 = document.createElement("h3");
+        h3.textContent = data.title || "";
+
+        const p = document.createElement("p");
+        p.textContent = data.summary || "";
+
+        const actions = document.createElement("div");
+        actions.className = "card-actions";
+
+        const readBtn = document.createElement("button");
+        readBtn.className = "read-more";
+        readBtn.type = "button";
+        readBtn.textContent = "Read update";
+        readBtn.addEventListener("click", () => toggleStory(readBtn));
+
+        actions.appendChild(readBtn);
+
+        if (isAdmin) {
+          const delBtn = document.createElement("button");
+          delBtn.className = "delete-story-btn visible";
+          delBtn.type = "button";
+          delBtn.textContent = "Delete";
+          delBtn.addEventListener("click", async () => {
+            try {
+              await deleteDoc(doc(db, "news", item.id));
+            } catch (err) {
+              alert("Could not delete post: " + err.message);
+            }
+          });
+          actions.appendChild(delBtn);
+        }
+
+        const fullStory = document.createElement("div");
+        fullStory.className = "full-story";
+        fullStory.textContent = data.body || "";
+
+        article.append(top, h3, p, actions, fullStory);
+        return article;
+      });
+
+      newsList.innerHTML = starterCardsHTML;
+      dynamicCards.reverse().forEach((card) => {
+        newsList.prepend(card);
+      });
+      applyNewsFilter();
+    }
+
+    function startNewsFeed(isAdmin) {
+      if (unsubscribeNews) {
+        unsubscribeNews();
+        unsubscribeNews = null;
+      }
+
+      const q = query(collection(db, "news"), orderBy("createdAt", "desc"));
+      unsubscribeNews = onSnapshot(
+        q,
+        (snapshot) => {
+          renderFirestoreStories(snapshot.docs, isAdmin);
+        },
+        () => {
+          newsList.innerHTML = starterCardsHTML;
+          applyNewsFilter();
+        }
+      );
+    }
 
     function setPasswordVisibility(visible) {
       authPassword.type = visible ? "text" : "password";
@@ -1014,6 +1303,39 @@
     tabSignup.addEventListener("click", () => setMode("signup"));
     tabLogin.addEventListener("click", () => setMode("login"));
     document.getElementById("quickSwitchBtn").addEventListener("click", () => setMode("login"));
+
+    togglePublisherBtn.addEventListener("click", () => {
+      const isOpen = publisherFormWrap.classList.toggle("open");
+      togglePublisherBtn.textContent = isOpen ? "Close Form" : "+ Upload News";
+    });
+
+    newsPostForm.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      if (!currentUser || currentUser.email !== ADMIN_EMAIL) return;
+
+      publishNewsBtn.disabled = true;
+      publishStatus.className = "publish-status";
+      publishStatus.textContent = "Publishing...";
+
+      try {
+        await addDoc(collection(db, "news"), {
+          category: newsCategory.value,
+          title: newsTitle.value.trim(),
+          summary: newsSummary.value.trim(),
+          body: newsBody.value.trim(),
+          author: currentUser.email,
+          createdAt: serverTimestamp()
+        });
+        newsPostForm.reset();
+        publishStatus.className = "publish-status ok";
+        publishStatus.textContent = "News published live!";
+      } catch (err) {
+        publishStatus.className = "publish-status err";
+        publishStatus.textContent = "Error: " + err.message;
+      } finally {
+        publishNewsBtn.disabled = false;
+      }
+    });
 
     authForm.addEventListener("submit", async (e) => {
       e.preventDefault();
@@ -1078,13 +1400,23 @@
     });
 
     onAuthStateChanged(auth, (user) => {
+      currentUser = user;
       if (user) {
         authGate.style.display = "none";
         mainSite.style.display = "block";
         userEmailDisplay.textContent = user.email || user.displayName || "Member";
+
+        const isAdmin = user.email === ADMIN_EMAIL;
+        adminPanel.style.display = isAdmin ? "block" : "none";
+        startNewsFeed(isAdmin);
       } else {
+        if (unsubscribeNews) {
+          unsubscribeNews();
+          unsubscribeNews = null;
+        }
         mainSite.style.display = "none";
         authGate.style.display = "flex";
+        adminPanel.style.display = "none";
         userEmailDisplay.textContent = "";
       }
     });
